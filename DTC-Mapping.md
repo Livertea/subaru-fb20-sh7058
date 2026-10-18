@@ -1,5 +1,14 @@
 # DTC P-Code Mapping
 
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
 ## The Breakthrough
 
 All **236 diagnostic trouble code (DTC) enable/disable switches** in the EP5GD00A ROM were mapped with their P-code labels — **without any disassembly**.

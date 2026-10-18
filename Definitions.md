@@ -1,5 +1,14 @@
 # Definitions
 
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
 Download the RomRaider XML definition files for EP5GD00A.
 
 > **⚠️ Not validated on hardware.** These definitions are structurally validated against ROM bytes but have not been tested on a running engine. Do not flash a modified ROM based on these files.
@@ -79,6 +88,59 @@ This project uses semantic versioning `X.X.X`:
 **Contents:**
 - Timing Maps G–J @0xD72C4+ (13×17 uint8, 3–18°)
 - Key finding: directory implied uint16, but uint8 reading reveals clean timing data
+
+### v0.3.1d — Letter File (1 table)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.3.1d.xml` |
+| **Tables** | 1 (new only) |
+| **Date** | 2026-10-18 |
+| **Status** | Pending validation |
+
+**Contents:**
+- Unknown ECT Compensation @0xC3E38 (16-el, smooth decrease 655→218)
+
+### v0.3.1e — Letter File (5 tables)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.3.1e.xml` |
+| **Tables** | 5 (new only) |
+| **Date** | 2026-10-18 |
+| **Status** | Pending validation |
+
+**Contents:** Tier 2 dispatcher tables, all code-confirmed:
+- 0xC01B8 (16-el, binary step pattern)
+- 0xC3FE8 (ECT comp, companion to 0xC3E38)
+- 0xD98C8 (Warmup Comp ECT)
+- 0xDE798 (ECT comp with plateaus)
+- 0xCAC80 (9-el RPM table)
+
+### v0.3.1f — Letter File (5 tables)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.3.1f.xml` |
+| **Tables** | 5 (new only) |
+| **Date** | 2026-10-18 |
+| **Status** | Pending validation |
+
+**Contents:** From the 31-table ECT family @0xCEB64:
+- 0xCECA4, 0xCF546, 0xCED34, 0xCF466, 0xCF4A6 (all 16-el, shared ECT axis)
+
+### v0.3.1g — Letter File (78 tables)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.3.1g.xml` |
+| **Tables** | 78 (new only) |
+| **Date** | 2026-10-18 |
+| **Status** | Pending validation |
+
+**Contents:** Bulk 2D triage from dispatcher cross-reference — 78 validated tables from the 238-table dispatcher discovery. All physically spot-verified against ROM bytes.
+
+**Running total: 602 tables** (488 + 19 + 2 + 4 + 1 + 5 + 5 + 78).
 
 ---
 

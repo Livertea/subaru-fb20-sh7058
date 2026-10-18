@@ -1,5 +1,14 @@
 # EP5GD00A: Open-Source ECU Definition for the 2012 Subaru Impreza FB20
 
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
 ## What Is This?
 
 This is a ground-up reverse-engineering project to build a **RomRaider tuning definition** for the 2012 Subaru Impreza 2.0i Sport with manual transmission — a car for which no public tuning definition existed.
@@ -25,11 +34,12 @@ No tuning definition existed for this ECU. The closest public reference was a de
 
 | Metric | Value |
 |--------|-------|
-| **Tables mapped** | **507** |
+| **Tables mapped** | **602** |
 | **Current full revision** | 0.3 (488 tables) |
-| **Letter files** (pending validation) | 0.3.1a (19), 0.3.1b (2), 0.3.1c (4) |
+| **Letter files** (pending validation) | 0.3.1a (19), 0.3.1b (2), 0.3.1c (4), 0.3.1d (1), 0.3.1e (5), 0.3.1f (5), 0.3.1g (78) |
 | **DTC switches mapped** | 236 P-codes |
 | **Disassembly** | Ghidra environment working, key subsystems traced |
+| **GitHub** | [Livertea/subaru-fb20-sh7058](https://github.com/Livertea/subaru-fb20-sh7058) |
 
 ### ⚠️ Validation Status
 
@@ -48,7 +58,7 @@ The plan:
 
 **The original author will likely not be actively maintaining this project going forward.**
 
-This wiki is a snapshot of exploratory research. If you find errors, want to expand the coverage, or want to take over maintenance — please do. That's why it's public. See [[Contributing]] for how to help.
+This wiki is a snapshot of exploratory research. If you find errors, want to expand the coverage, or want to take over maintenance — please do. That's why it's public. See [Contributing](Contributing.md) for how to help.
 
 ---
 
@@ -58,23 +68,25 @@ Almost entirely by **AI agents working in parallel**, directed by a human enthus
 
 This is disclosed openly because it matters for verification. The project's standing rule: **trust nothing, verify everything against the raw ROM bytes.**
 
-See [[Methodology]] for the full workflow.
+See [Methodology](Methodology.md) for the full workflow.
 
 ## Key Breakthroughs
 
-- **DTC P-code mapping** — All 236 diagnostic trouble code switches mapped via the descriptor table, without disassembly. See [[DTC-Mapping]].
+- **DTC P-code mapping** — All 236 diagnostic trouble code switches mapped via the descriptor table, without disassembly. See [DTC-Mapping](DTC-Mapping.md).
 - **Volumetric Efficiency resolved** — 84 VE tables identified (the FB20 is speed-density, not MAF-based like the WRX).
-- **Table dispatcher found** — The firmware's central table lookup at `0xBE964` with 479 call sites. See [[Ghidra-Guide]].
+- **Table dispatcher found** — The firmware's central table lookup at `0xBE964` with 479 call sites. See [Ghidra-Guide](Ghidra-Guide.md).
 - **X-tau transient fueling** — 12-table system identified, trigger condition found via disassembly.
-- **Honda SH7058** — The methodology was applied to a Honda Civic Si ROM, producing the first open-source Honda SH7058 definition. See [[Honda-Project]].
+- **Honda SH7058** — The methodology was applied to a Honda Civic Si ROM, producing the first open-source Honda SH7058 definition. See [Honda-Project](Honda-Project.md).
+- **Gen 1 cross-reference** — Compared against SH7055 (2003–2010) definitions: 16 of 28 scaling formulas are character-identical across 8 years. Denso froze the physics, only changed data representation.
+- **XmlToIdc-equivalent for Ghidra** — In progress: a script to import all 602 tables as Ghidra labels, making future disassembly dramatically faster.
 
 ## Quick Links
 
-- [[Definitions]] — Download the XML files
-- [[Table-Reference]] — What's been mapped, by category
-- [[Methodology]] — How to hunt tables yourself
-- [[Contributing]] — How to help validate
-- [[FAQ]] — Common questions
+- [Definitions](Definitions.md) — Download the XML files
+- [Table-Reference](Table-Reference.md) — What's been mapped, by category
+- [Methodology](Methodology.md) — How to hunt tables yourself
+- [Contributing](Contributing.md) — How to help validate
+- [FAQ](FAQ.md) — Common questions
 
 ## Project History
 
@@ -86,4 +98,8 @@ See [[Methodology]] for the full workflow.
 | 2026-10-18 | v0.3 released (488 tables). |
 | 2026-10-18 | Ghidra disassembly phase begins. Dispatcher, knock, fuel subsystems traced. |
 | 2026-10-18 | First open-source Honda SH7058 definition built (v0.1). |
+| 2026-10-18 | Letter files 0.3.1d–g released (89 tables). Total: 602. |
+| 2026-10-18 | Gen 1 (SH7055) cross-reference complete. 16/28 scalings identical. |
+| 2026-10-18 | GitHub repo published: Livertea/subaru-fb20-sh7058 (CC BY-NC-SA 4.0). |
+| 2026-10-18 | XmlToIdc-equivalent Ghidra label script in development. |
 | 2026-11-06 | *(Planned)* Cable arrives. ROM pull and hardware validation begins. |

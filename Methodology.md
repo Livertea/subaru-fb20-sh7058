@@ -1,8 +1,17 @@
 # Methodology: How to Hunt Tables
 
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
 This is the table-discovery workflow developed during the EP5GD00A project. It's written as a guide someone else could follow on a different Denso SH7058 ROM.
 
-> **Status:** This methodology produced 507 tables. It has not been independently replicated on another ROM yet. The Honda project (see [[Honda-Project]]) is the first test of transferability.
+> **Status:** This methodology produced 507 tables. It has not been independently replicated on another ROM yet. The Honda project (see [Honda-Project](Honda-Project.md)) is the first test of transferability.
 
 ---
 
@@ -75,7 +84,7 @@ For ECUs with per-DTC enable/disable switches:
 3. **Map all entries** — Read every descriptor, extract P-codes, build the full table
 4. **Validate** — Check against known codes (P0305/P0306 should be disabled on a 4-cylinder; P0420 should exist)
 
-This method mapped all 236 DTC switches **without any disassembly**. See [[DTC-Mapping]] for details.
+This method mapped all 236 DTC switches **without any disassembly**. See [DTC-Mapping](DTC-Mapping.md) for details.
 
 ## Step 5: Scaling Fingerprints
 
@@ -91,7 +100,7 @@ This is how we found tables the directory didn't list clearly.
 
 The most powerful method, developed late in the project:
 
-1. **Set up Ghidra** with the SH-2 processor (see [[Ghidra-Guide]])
+1. **Set up Ghidra** with the SH-2 processor (see [Ghidra-Guide](Ghidra-Guide.md))
 2. **Find the table dispatcher** — Denso uses a central routine for table lookups (ours is at `0xBE964`)
 3. **Extract all call sites** — Every `jsr` to the dispatcher is a table access
 4. **Resolve directory entries** — Each call site references a directory entry; resolve to the table address

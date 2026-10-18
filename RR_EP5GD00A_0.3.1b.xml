@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<roms>
+  <rom>
+    <romid>
+      <xmlid>EP5GD00A_0.3.1b</xmlid>
+      <internalidaddress>2004</internalidaddress>
+      <internalidstring>EP5GD00A</internalidstring>
+      <year>2012</year>
+      <market>USDM</market>
+      <make>Subaru</make>
+      <model>Impreza</model>
+      <submodel>2.0i Sport</submodel>
+      <transmission>MT</transmission>
+      <memmodel>SH7058</memmodel>
+      <flashmethod>subarucan</flashmethod>
+      <filesize>1024kb</filesize>
+    </romid>
+    <table type="3D" name="Tip-in Enrichment Compensation (ECT) J (Unverified)" category="Fueling" storageaddress="D1F60" storagetype="uint16" endian="big" sizex="16" sizey="5">
+      <scaling units="Multiplier" expression="x/65536" to_byte="x*65536" format="0.0000" fineincrement="0.001" coarseincrement="0.01" />
+      <table type="X Axis" storageaddress="CEBA4" storagetype="float" endian="big">
+        <scaling units="Degrees C" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="10" />
+      </table>
+      <table type="Y Axis" storageaddress="D1F4C" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+    </table>
+    <table type="3D" name="Tip-in Enrichment Compensation (ECT) Warm B (Unverified)" category="Fueling" storageaddress="D25B0" storagetype="uint16" endian="big" sizex="7" sizey="3">
+      <scaling units="Multiplier" expression="x/65536" to_byte="x*65536" format="0.0000" fineincrement="0.001" coarseincrement="0.01" />
+      <table type="X Axis" storageaddress="D2588" storagetype="float" endian="big">
+        <scaling units="Degrees C" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="10" />
+      </table>
+      <table type="Y Axis" storageaddress="D25A4" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+    </table>
+  </rom>
+</roms>

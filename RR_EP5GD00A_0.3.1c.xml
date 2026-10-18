@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<roms>
+  <rom>
+    <romid>
+      <xmlid>EP5GD00A_0.3.1c</xmlid>
+      <internalidaddress>2004</internalidaddress>
+      <internalidstring>EP5GD00A</internalidstring>
+      <year>2012</year>
+      <market>USDM</market>
+      <make>Subaru</make>
+      <model>Impreza</model>
+      <submodel>2.0i Sport</submodel>
+      <transmission>MT</transmission>
+      <memmodel>SH7058</memmodel>
+      <flashmethod>subarucan</flashmethod>
+      <filesize>1024kb</filesize>
+    </romid>
+    <table type="3D" name="Timing Map G (Unverified)" category="Timing" storageaddress="D72C4" storagetype="uint8" endian="big" sizex="13" sizey="17">
+      <scaling units="degrees" expression="x*0.1" to_byte="x/0.1" format="0.00" fineincrement="0.1" coarseincrement="1" />
+      <table type="X Axis" storageaddress="D724C" storagetype="float" endian="big">
+        <scaling units="g/rev" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+      </table>
+      <table type="Y Axis" storageaddress="D7280" storagetype="float" endian="big">
+        <scaling units="RPM" expression="x" to_byte="x" format="0" fineincrement="100" coarseincrement="500" />
+      </table>
+    </table>
+    <table type="3D" name="Timing Map H (Unverified)" category="Timing" storageaddress="D741C" storagetype="uint8" endian="big" sizex="13" sizey="17">
+      <scaling units="degrees" expression="x*0.1" to_byte="x/0.1" format="0.00" fineincrement="0.1" coarseincrement="1" />
+      <table type="X Axis" storageaddress="D73A4" storagetype="float" endian="big">
+        <scaling units="g/rev" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+      </table>
+      <table type="Y Axis" storageaddress="D73D8" storagetype="float" endian="big">
+        <scaling units="RPM" expression="x" to_byte="x" format="0" fineincrement="100" coarseincrement="500" />
+      </table>
+    </table>
+    <table type="3D" name="Timing Map I (Unverified)" category="Timing" storageaddress="D7574" storagetype="uint8" endian="big" sizex="13" sizey="17">
+      <scaling units="degrees" expression="x*0.1" to_byte="x/0.1" format="0.00" fineincrement="0.1" coarseincrement="1" />
+      <table type="X Axis" storageaddress="D74FC" storagetype="float" endian="big">
+        <scaling units="g/rev" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+      </table>
+      <table type="Y Axis" storageaddress="D7530" storagetype="float" endian="big">
+        <scaling units="RPM" expression="x" to_byte="x" format="0" fineincrement="100" coarseincrement="500" />
+      </table>
+    </table>
+    <table type="3D" name="Timing Map J (Unverified)" category="Timing" storageaddress="D76CC" storagetype="uint8" endian="big" sizex="13" sizey="17">
+      <scaling units="degrees" expression="x*0.1" to_byte="x/0.1" format="0.00" fineincrement="0.1" coarseincrement="1" />
+      <table type="X Axis" storageaddress="D7654" storagetype="float" endian="big">
+        <scaling units="g/rev" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+      </table>
+      <table type="Y Axis" storageaddress="D7688" storagetype="float" endian="big">
+        <scaling units="RPM" expression="x" to_byte="x" format="0" fineincrement="100" coarseincrement="500" />
+      </table>
+    </table>
+  </rom>
+</roms>

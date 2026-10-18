@@ -1,5 +1,14 @@
 # FAQ
 
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
 ## Is this safe to flash to my ECU?
 
 **No.** These definitions have not been validated on real hardware. The tables are structurally validated against ROM bytes, but no one has confirmed correct behavior on a running engine.
@@ -31,14 +40,14 @@ It will **not** work on:
 2. Check that tables display sane values
 3. Report anything that looks wrong
 
-See [[Contributing]] for details. No hardware required.
+See [Contributing](Contributing.md) for details. No hardware required.
 
 ## What's the difference between 0.3 and 0.3.1a?
 
 - **0.3** is a full definition (488 tables) — load this as your base
-- **0.3.1a** (and b, c) are letter files with only new tables — load these *in addition to* 0.3
+- **0.3.1a** through **0.3.1g** are letter files with only new tables — load these *in addition to* 0.3
 
-Letter files let you validate new tables separately before they're merged into the next full revision.
+Letter files let you validate new tables separately before they're merged into the next full revision. Total across all files: **602 tables**.
 
 ## Why are some tables marked "(Unverified)"?
 
@@ -58,7 +67,7 @@ The likely culprits are mapped:
 
 But: **not validated yet.** Don't change these until logger data confirms the relationship.
 
-## Why 507 tables? My WRX definition has 2,000+.
+## Why 602 tables? My WRX definition has 2,000+.
 
 The WRX definition you're thinking of likely includes:
 - Many more DTC switches (we have 236; some defs have 400+)
@@ -66,9 +75,7 @@ The WRX definition you're thinking of likely includes:
 - Boost control tables (we're naturally aspirated — no turbo)
 - Years of community additions
 
-Our 507 tables cover the tables the ECU actually references (verified via dispatcher analysis: 407/408 code-referenced 3D tables). The WRX simply has a more complex calibration because it's turbocharged.
-
-That said, the dispatcher found 238 additional 2D tables we haven't individually validated yet. The count will grow.
+Our 602 tables (157 3D · 181 2D · 28 1D · 236 Switch) cover the tables the ECU actually references. The dispatcher cross-reference found 238 additional 2D tables beyond the original directory analysis — most are now in letter files 0.3.1d–g. The WRX simply has a more complex calibration because it's turbocharged.
 
 ## Was this really built by AI?
 
@@ -78,10 +85,10 @@ This is disclosed because it affects how you should treat the output: with the s
 
 ## Can I use this for my Honda/Nissan/Mitsubishi?
 
-Not directly. The **methodology** ([[Methodology]]) transfers, but no specific tables, addresses, or scalings will work on a different ROM.
+Not directly. The **methodology** ([Methodology](Methodology.md)) transfers, but no specific tables, addresses, or scalings will work on a different ROM.
 
-There is a nascent [[Honda-Project]] applying the same approach to a Civic Si. It's v0.1 (2 tables) — proof of concept only.
+There is a nascent [Honda-Project](Honda-Project.md) applying the same approach to a Civic Si. It's v0.1 (2 tables) — proof of concept only.
 
 ## Who maintains this?
 
-The original author is unlikely to actively maintain this going forward. The documentation is provided as-is. If you find errors or want to continue the work, you're welcome to — that's why it's public. See [[Contributing]].
+The original author is unlikely to actively maintain this going forward. The documentation is provided as-is. If you find errors or want to continue the work, you're welcome to — that's why it's public. See [Contributing](Contributing.md).

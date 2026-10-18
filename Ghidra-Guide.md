@@ -1,5 +1,14 @@
 # Ghidra Disassembly Guide
 
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
 ## Setup
 
 ### What Was Built
@@ -125,10 +134,19 @@ Scripts are in `~/workspace/tools/ghidra_scripts/`:
 - `KnockDisasm.py` — Knock subsystem analysis helper
 - Plus 10 additional analysis scripts from the dispatcher investigation
 
+### XmlToIdc-Equivalent: Ghidra Label Importer (In Progress)
+
+A script to import all 602 RomRaider table definitions as Ghidra labels — data addresses, X/Y axes, and table directory entries. This turns disassembly from "what is this address?" into reading labeled functions.
+
+**Status:** Table inventory JSON built and validated (602 tables, strict-parse clean). Ghidra label API being researched. Script in development.
+
+**Why it matters:** Every prior disassembly task (knock trace, fuel trace, dispatcher analysis) was done by manually cross-referencing hex addresses against XML files. With labels, future work is dramatically faster.
+
 ## What's Next for Disassembly
 
-1. **RAM mirror mapping** — Map the 15,302 RAM refs back to flash tables via boot-copy code
-2. **Interpolation R2 values** — Identify which routine handles which table type
-3. **SSM dispatcher** — Trace from CAN RX / boot code
-4. **Knock sensor A/D path** — Not yet traced (different code region)
-5. **0xD0000 investigation** — 20 code refs, unclear structure, highest-priority unknown
+1. **XmlToIdc label import** — Finish and run the script (in progress)
+2. **RAM mirror mapping** — Map the 15,302 RAM refs back to flash tables via boot-copy code
+3. **Interpolation R2 values** — Identify which routine handles which table type
+4. **SSM dispatcher** — Trace from CAN RX / boot code
+5. **Knock sensor A/D path** — Not yet traced (different code region)
+6. **0xD0000** — Resolved: NOT a table (repeating 128-byte f32 template blocks, single code ref)

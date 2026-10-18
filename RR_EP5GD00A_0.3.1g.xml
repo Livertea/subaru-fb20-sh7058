@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roms>
+  <rom>
+    <romid>
+      <xmlid>EP5GD00A_0.3.1g</xmlid>
+      <internalidaddress>2004</internalidaddress>
+      <internalidstring>EP5GD00A</internalidstring>
+      <ecuid>EP5GD00A</ecuid>
+      <year>2012</year>
+      <market>USDM</market>
+      <make>Subaru</make>
+      <model>Impreza</model>
+      <submodel>2.0i Sport</submodel>
+      <transmission>MT</transmission>
+      <memmodel>SH7058</memmodel>
+      <flashmethod>subarucan</flashmethod>
+      <filesize>1024kb</filesize>
+    </romid>
+    <table type="2D" name="Unknown 2D @0xC4100 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="C4100">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean 3-step [5000x5,6000x3,4500x8]. 1 code ref(s). X axis @0xC3D10. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="C3D10">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCFE9C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="CFE9C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean binary [32768x3,35062x13]. 1 code ref(s). X axis @0xCFE5C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CFE5C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCF7A6 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF7A6">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean binary [0x3,839x13], ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCF826 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF826">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>window switch [0x3,1229x5,0x8] active mid-ECT, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0814 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="D0814">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean 3-step [2560x10,3072,5120x5], ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD596C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="8" storageaddress="D596C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean binary [32896x4,16448x4]. 1 code ref(s). X axis @0xD594C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="8" storageaddress="D594C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCB19C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="CB19C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean binary [32768x6,8192x10]. 1 code ref(s). X axis @0xCA578. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CA578">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xDD920 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="DD920">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean binary [3328x12,3072x4]. 1 code ref(s). X axis @0xDD8E0. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="DD8E0">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xDE6D8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="DE6D8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean 3-step [3375x9,1688,2500x6]. 1 code ref(s). X axis @0xDE698. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="DE698">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCA60E (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="13" storageaddress="CA60E">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean binary-ish [51400x7,25700x6]. 1 code ref(s). X axis @0xCA32C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="13" storageaddress="CA32C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC0300 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="5" storageaddress="C0300">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC02EC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="5" storageaddress="C02EC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC03FC (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="12" storageaddress="C03FC">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC03CC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="12" storageaddress="C03CC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC11D8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="3" storageaddress="C11D8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC11CC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="3" storageaddress="C11CC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC1384 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="C1384">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>varied plausible data, no gaps. 1 code ref(s). X axis @0xC1344. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="C1344">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC122C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="20" storageaddress="C122C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>varied plausible data, no gaps. 1 code ref(s). X axis @0xC11DC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="20" storageaddress="C11DC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC126C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="6" storageaddress="C126C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC1254. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="6" storageaddress="C1254">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC12B8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="7" storageaddress="C12B8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC129C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="7" storageaddress="C129C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC12F0 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="10" storageaddress="C12F0">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC12C8. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="10" storageaddress="C12C8">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC2768 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="9" storageaddress="C2768">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC2744. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="9" storageaddress="C2744">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC3E18 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="C3E18">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC3D10. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="C3D10">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC439C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="5" storageaddress="C439C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC4388. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="5" storageaddress="C4388">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC40D8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="4" storageaddress="C40D8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC40C8. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="4" storageaddress="C40C8">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC4158 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="6" storageaddress="C4158">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC4140. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="6" storageaddress="C4140">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC4564 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="50" storageaddress="C4564">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>varied plausible data, no gaps. 1 code ref(s). X axis @0xC449C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="50" storageaddress="C449C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC41B4 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="4" storageaddress="C41B4">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xC41A4. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="4" storageaddress="C41A4">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC9010 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="15" storageaddress="C9010">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>varied plausible data, no gaps. 1 code ref(s). X axis @0xC8FD4. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="15" storageaddress="C8FD4">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCAC1C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="10" storageaddress="CAC1C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>varied plausible data, no gaps. 1 code ref(s). X axis @0xCABF4. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="10" storageaddress="CABF4">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCA608 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="6" storageaddress="CA608">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCA5F0. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="6" storageaddress="CA5F0">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCAE54 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="11" storageaddress="CAE54">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCAE28. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="11" storageaddress="CAE28">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCEDF0 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="5" storageaddress="CEDF0">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCEDDC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="5" storageaddress="CEDDC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCF646 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF646">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCF606 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF606">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCF726 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF726">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCF766 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF766">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCFC18 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="CFC18">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCEBA4. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEBA4">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCFC78 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CFC78">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCFD68 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="13" storageaddress="CFD68">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCFD34. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="13" storageaddress="CFD34">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD02DE (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="D02DE">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCEBA4. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEBA4">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0390 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="D0390">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0358 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="D0358">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD0318. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="D0318">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0410 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="D0410">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD03D0. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="D03D0">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCF310 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="3" storageaddress="CF310">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCF304. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="3" storageaddress="CF304">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD06A4 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="18" storageaddress="D06A4">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD065C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="18" storageaddress="D065C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0754 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="D0754">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD07F4 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="D07F4">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0900 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="D0900">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve, ECT family. 1 code ref(s). X axis @0xCEB64. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0C5C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="11" storageaddress="D0C5C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>varied plausible data, no gaps. 1 code ref(s). X axis @0xD0C30. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="11" storageaddress="D0C30">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD5684 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="10" storageaddress="D5684">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD565C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="10" storageaddress="D565C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD5CA4 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="10" storageaddress="D5CA4">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD5C7C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="10" storageaddress="D5C7C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD5A5C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="7" storageaddress="D5A5C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD5A40. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="7" storageaddress="D5A40">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD5AA8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="4" storageaddress="D5AA8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD5A98. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="4" storageaddress="D5A98">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD9490 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="20" storageaddress="D9490">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD9440. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="20" storageaddress="D9440">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD9434 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="6" storageaddress="D9434">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD941C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="6" storageaddress="D941C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD9514 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="9" storageaddress="D9514">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD94F0. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="9" storageaddress="D94F0">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD94DC (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="9" storageaddress="D94DC">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD94B8. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="9" storageaddress="D94B8">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD9608 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="8" storageaddress="D9608">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD95E8. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="8" storageaddress="D95E8">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD9720 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="9" storageaddress="D9720">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD96FC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="9" storageaddress="D96FC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD9758 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="9" storageaddress="D9758">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD9734. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="9" storageaddress="D9734">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD9A04 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="15" storageaddress="D9A04">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD99C8. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="15" storageaddress="D99C8">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xDC864 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="5" storageaddress="DC864">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xDC850. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="5" storageaddress="DC850">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0044 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="9" storageaddress="D0044">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD0020. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="9" storageaddress="D0020">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD007C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="9" storageaddress="D007C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD0058. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="9" storageaddress="D0058">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCB2F8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="5" storageaddress="CB2F8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>varied plausible data, no gaps. 1 code ref(s). X axis @0xCB2E4. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="5" storageaddress="CB2E4">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCAD68 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="4" storageaddress="CAD68">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCAD58. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="4" storageaddress="CAD58">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCAED0 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="5" storageaddress="CAED0">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCAEBC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="5" storageaddress="CAEBC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD0710 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="18" storageaddress="D0710">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic ramp [72x4,88,150,300,360x12], 18-el. 1 code ref(s). X axis @0xD06C8. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="18" storageaddress="D06C8">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCB0F8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="17" storageaddress="CB0F8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xCA3EC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="17" storageaddress="CA3EC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD9644 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="11" storageaddress="D9644">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD9618. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="11" storageaddress="D9618">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xD50A8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="8" storageaddress="D50A8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean monotonic curve. 1 code ref(s). X axis @0xD5088. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="8" storageaddress="D5088">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xC0428 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="5" storageaddress="C0428">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean threshold [0,0,16384,24576,24576]. 1 code ref(s). X axis @0xC0414. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="5" storageaddress="C0414">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCACB0 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="7" storageaddress="CACB0">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean decrease [22938,22938,21823,20480x4]. 1 code ref(s). X axis @0xCAC94. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="7" storageaddress="CAC94">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCACDC (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="7" storageaddress="CACDC">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean increase [9830,9830,10945,12042x4]. 1 code ref(s). X axis @0xCACC0. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="7" storageaddress="CACC0">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCABC8 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="6" storageaddress="CABC8">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean linear decrease [2680..2194]. 1 code ref(s). X axis @0xCABB0. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="6" storageaddress="CABB0">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCAEDA (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="13" storageaddress="CAEDA">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>mostly rising [199..400], minor dip. 1 code ref(s). X axis @0xCA32C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="13" storageaddress="CA32C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCB17C (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="16" storageaddress="CB17C">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean decrease [32768x3..8192x10]. 1 code ref(s). X axis @0xCA578. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="16" storageaddress="CA578">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCB0CA (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="17" storageaddress="CB0CA">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>decreasing [207..38] with noise, 17-el. 1 code ref(s). X axis @0xCA3EC. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="17" storageaddress="CA3EC">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCB084 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="7" storageaddress="CB084">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>first 7 clean decreasing, last 6 are 0x7FF8 padding — true 7-el. 1 code ref(s). X axis @0xCA38C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="7" storageaddress="CA38C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown 2D @0xCAC50 (Unverified)" category="Misc" storagetype="uint16" endian="big" sizex="5" storageaddress="CAC50">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>clean decrease [9011..6226], X has repeated value — verify. 1 code ref(s). X axis @0xCAC3C. From dispatcher xref 2D triage (D2D_TRIAGE.md). Structure HIGH, identity MEDIUM. Do not tune from this label.</description>
+      <table type="X Axis" name="Axis" storagetype="float" endian="big" sizex="5" storageaddress="CAC3C">
+        <scaling units="" expression="x" format="#" />
+      </table>
+    </table>
+  </rom>
+</roms>

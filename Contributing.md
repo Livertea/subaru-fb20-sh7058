@@ -1,5 +1,14 @@
 # Contributing
 
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
 ## Maintenance Note
 
 **The original author (Johnathon) will likely not be actively maintaining this project going forward.**
@@ -7,6 +16,8 @@
 This documentation is provided as-is — a snapshot of exploratory research conducted in October 2026. If you find errors, want to expand the table coverage, or want to take over maintenance: **please do. That's why it's public.**
 
 This isn't abandonment — it's an invitation. The methodology is documented, the definitions are open, and the ROM is out there. If this work is useful to you, you're welcome to run with it.
+
+The hope is simple: that something here is of use to someone, somewhere — maybe even ten years from now. A kid with a beat-up 2012 Impreza and no budget finds this repo, and the tables save them months. The methodology gets reused on ROMs nobody's touched yet. That's why it's public.
 
 ---
 
@@ -16,7 +27,7 @@ This isn't abandonment — it's an invitation. The methodology is documented, th
 
 The easiest way to contribute:
 
-1. Download the definition files (see [[Definitions]])
+1. Download the definition files (see [Definitions](Definitions.md))
 2. Load them in RomRaider with an EP5GD00A ROM
 3. Check tables for:
    - **Sane values** — Do fueling tables show realistic AFRs? Does timing look plausible?
@@ -39,7 +50,7 @@ When you have an OpenPort 2.0 (or compatible) cable:
 
 ### 3. Table Hunting
 
-Follow the [[Methodology]] to find tables we missed. The dispatcher cross-reference found 238 additional 2D tables — many still need individual validation and labeling.
+Follow the [Methodology](Methodology.md) to find tables we missed. The dispatcher cross-reference found 238 additional 2D tables — many still need individual validation and labeling.
 
 **Workflow for new tables:**
 1. Find and physically validate the table
@@ -56,7 +67,7 @@ Follow the [[Methodology]] to find tables we missed. The dispatcher cross-refere
 
 ### 5. Disassembly
 
-The Ghidra project is set up (see [[Ghidra-Guide]]). Open tasks:
+The Ghidra project is set up (see [Ghidra-Guide](Ghidra-Guide.md)). Open tasks:
 - RAM mirror mapping (15,302 refs to resolve)
 - 0xD0000 investigation (20 code refs, unclear structure)
 - SSM dispatcher tracing
@@ -77,8 +88,15 @@ These aren't optional — they keep the project coherent:
 ## Where to Discuss
 
 - **RomRaider Forums** — Subaru ECU Analysis subforum
-- **GitHub Issues** — For this wiki/repo (when published)
+- **GitHub Issues** — [Livertea/subaru-fb20-sh7058](https://github.com/Livertea/subaru-fb20-sh7058/issues)
 
 ## License
 
-All definitions and documentation are provided for open community use. If you build on this work, credit the project and keep your contributions open as well.
+All definitions and documentation are licensed under **CC BY-NC-SA 4.0** (Creative Commons Attribution-NonCommercial-ShareAlike).
+
+- ✅ Use, share, and adapt freely
+- ❌ **No commercial use** — this work cannot be sold or built into paid products
+- ✅ Derivatives must be shared under the same terms
+- ✅ Credit the project
+
+See the `LICENSE` file for the full legal text.

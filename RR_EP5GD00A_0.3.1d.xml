@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<roms>
+  <rom>
+    <romid>
+      <xmlid>EP5GD00A_0.3.1d</xmlid>
+      <internalidaddress>2004</internalidaddress>
+      <internalidstring>EP5GD00A</internalidstring>
+      <year>2012</year>
+      <market>USDM</market>
+      <make>Subaru</make>
+      <model>Impreza</model>
+      <submodel>2.0i Sport</submodel>
+      <transmission>MT</transmission>
+      <memmodel>SH7058</memmodel>
+      <flashmethod>subarucan</flashmethod>
+      <filesize>1024kb</filesize>
+    </romid>
+    <table type="2D" name="Unknown ECT Compensation @0xC3E38 (Unverified)" category="Misc" storageaddress="C3E38" storagetype="uint16" endian="big" sizex="16">
+      <scaling units="raw" expression="x" to_byte="x" format="#" fineincrement="1" coarseincrement="10" />
+      <table type="X Axis" storageaddress="C3CD0" storagetype="float" endian="big">
+        <scaling units="C" expression="x" to_byte="x" format="#" fineincrement="1" coarseincrement="10" />
+      </table>
+    </table>
+  </rom>
+</roms>

@@ -1,5 +1,14 @@
 # Honda SH7058 Project
 
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
 ## Why Honda?
 
 The Subaru methodology was developed on a Denso SH7058. Honda also used the SH7058 extensively (2006–2012) — but in ECUs built by **Keihin** (now Hitachi Astemo), not Denso.

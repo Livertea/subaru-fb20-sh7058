@@ -1,8 +1,21 @@
 # Table Reference
 
-Tables mapped in the EP5GD00A definition, organized by category. Counts are from v0.3 plus letter files (0.3.1a/b/c).
+> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
+>
+> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
+>
+> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+
+---
+
+
+Tables mapped in the EP5GD00A definition, organized by category. Counts are from v0.3 plus letter files (0.3.1a through 0.3.1g).
 
 > **Status:** All tables are structurally validated against ROM bytes. Labels and identities range from HIGH to MEDIUM confidence. None are hardware-validated yet.
+
+**Inventory breakdown:** 157 3D · 181 2D · 28 1D · 236 Switch = **602 tables**
+
+> **⚠️ Known issue:** Address 0xD487C has two tables claiming it ("Primary Open Loop Fueling Cruise" 10×16 and "Idle Airflow Decel Adder B" 11×10, same X axis). One is mislabeled. Also 0xD2798 ("Injector Correction C" and "Idle Speed Target G"). Found during automated inventory validation. Do not rely on these addresses until resolved.
 
 ---
 
@@ -91,7 +104,7 @@ The largest category. The FB20 is speed-density (not MAF-based like the WRX turb
 2. **Fine Correction** — Learned, stored in RAM (0xFFFF8800). Range B [1500–3600] RPM.
 3. **Rough Correction / IAM** — Global multiplier. Range C [1300–4400] RPM.
 
-See [[Ghidra-Guide]] for the function map.
+See [Ghidra-Guide](Ghidra-Guide.md) for the function map.
 
 ---
 
@@ -144,7 +157,7 @@ See [[Ghidra-Guide]] for the function map.
 
 Every diagnostic trouble code has an enable/disable switch. All 236 mapped with P-code labels.
 
-See [[DTC-Mapping]] for the full story.
+See [DTC-Mapping](DTC-Mapping.md) for the full story.
 
 **Notable:**
 - **P0420** = Switch 57 (catalyst efficiency)
@@ -178,4 +191,4 @@ See [[DTC-Mapping]] for the full story.
 
 ## Download
 
-See [[Definitions]] for the XML files containing all tables.
+See [Definitions](Definitions.md) for the XML files containing all tables.

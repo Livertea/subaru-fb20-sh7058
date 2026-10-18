@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<roms>
+  <rom>
+    <romid>
+      <xmlid>EP5GD00A_0.3.1e</xmlid>
+      <internalidaddress>2004</internalidaddress>
+      <internalidstring>EP5GD00A</internalidstring>
+      <year>2012</year>
+      <market>USDM</market>
+      <make>Subaru</make>
+      <model>Impreza</model>
+      <submodel>2.0i Sport</submodel>
+      <transmission>MT</transmission>
+      <memmodel>SH7058</memmodel>
+      <flashmethod>subarucan</flashmethod>
+      <filesize>1024kb</filesize>
+    </romid>
+    <table type="2D" name="Unknown Step Table @0xC01B8 (Unverified)" category="Misc" storageaddress="C01B8" storagetype="uint16" endian="big" sizey="16">
+      <scaling units="Multiplier" expression="x/32768" to_byte="x*32768" format="0.0000" fineincrement="0.001" coarseincrement="0.01" />
+      <table type="Y Axis" storageaddress="C0178" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="10" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown ECT Compensation @0xC3FE8 (Unverified)" category="Misc" storageaddress="C3FE8" storagetype="uint16" endian="big" sizey="16">
+      <scaling units="Multiplier" expression="x/32768" to_byte="x*32768" format="0.0000" fineincrement="0.001" coarseincrement="0.01" />
+      <table type="Y Axis" storageaddress="C3CD0" storagetype="float" endian="big">
+        <scaling units="Degrees C" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="10" />
+      </table>
+    </table>
+    <table type="2D" name="Warmup Compensation (ECT) @0xD98C8 (Unverified)" category="Fueling" storageaddress="D98C8" storagetype="uint16" endian="big" sizey="16">
+      <scaling units="%" expression="x*0.00152588" to_byte="x/0.00152588" format="0.00" fineincrement="0.1" coarseincrement="1" />
+      <table type="Y Axis" storageaddress="D8BA8" storagetype="float" endian="big">
+        <scaling units="Degrees C" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="10" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown ECT Compensation @0xDE798 (Unverified)" category="Misc" storageaddress="DE798" storagetype="uint16" endian="big" sizey="16">
+      <scaling units="Multiplier" expression="x/32768" to_byte="x*32768" format="0.0000" fineincrement="0.001" coarseincrement="0.01" />
+      <table type="Y Axis" storageaddress="DE318" storagetype="float" endian="big">
+        <scaling units="Degrees C" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="10" />
+      </table>
+    </table>
+    <table type="2D" name="Unknown RPM Table @0xCAC80 (Unverified)" category="Misc" storageaddress="CAC80" storagetype="uint16" endian="big" sizey="9">
+      <scaling units="Multiplier" expression="x/32768" to_byte="x*32768" format="0.0000" fineincrement="0.001" coarseincrement="0.01" />
+      <table type="Y Axis" storageaddress="CA32C" storagetype="float" endian="big">
+        <scaling units="RPM" expression="x" to_byte="x" format="0" fineincrement="100" coarseincrement="500" />
+      </table>
+    </table>
+  </rom>
+</roms>

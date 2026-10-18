@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roms>
+  <rom>
+    <romid>
+      <xmlid>EP5GD00A_0.3.1f</xmlid>
+      <internalidaddress>2004</internalidaddress>
+      <internalidstring>EP5GD00A</internalidstring>
+      <ecuid>EP5GD00A</ecuid>
+      <year>2012</year>
+      <market>USDM</market>
+      <make>Subaru</make>
+      <model>Impreza</model>
+      <submodel>2.0i Sport</submodel>
+      <transmission>MT</transmission>
+      <memmodel>SH7058</memmodel>
+      <flashmethod>subarucan</flashmethod>
+      <filesize>1024kb</filesize>
+    </romid>
+    <table type="2D" name="ECT Compensation @0xCECA4 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CECA4">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>Step function: 1.004 cold, drops warm. 2 code refs. X axis @0xCEB64 (ECT -40 to 110 C). From dispatcher xref 31-table ECT family. Structure HIGH, identity MEDIUM.</description>
+      <table type="X Axis" name="ECT" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="C" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="ECT Compensation @0xCF546 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF546">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>Smooth decrease 1.92 to 1.41. 2 code refs. X axis @0xCEB64 (ECT -40 to 110 C). From dispatcher xref 31-table ECT family. Structure HIGH, identity MEDIUM.</description>
+      <table type="X Axis" name="ECT" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="C" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="ECT Compensation @0xCED34 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CED34">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>Binary: 0 cold, 1.004 warm. 1 code ref. X axis @0xCEB64 (ECT -40 to 110 C). From dispatcher xref 31-table ECT family. Structure HIGH, identity MEDIUM.</description>
+      <table type="X Axis" name="ECT" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="C" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="ECT Compensation @0xCF466 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF466">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>Smooth decrease, small values. 1 code ref. X axis @0xCEB64 (ECT -40 to 110 C). From dispatcher xref 31-table ECT family. Structure HIGH, identity MEDIUM.</description>
+      <table type="X Axis" name="ECT" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="C" expression="x" format="#" />
+      </table>
+    </table>
+    <table type="2D" name="ECT Compensation @0xCF4A6 (Unverified)" category="Fueling" storagetype="uint16" endian="big" sizex="16" storageaddress="CF4A6">
+      <scaling units="multiplier" expression="x/32768" format="#.###" />
+      <description>Near-flat, very small values. 1 code ref. X axis @0xCEB64 (ECT -40 to 110 C). From dispatcher xref 31-table ECT family. Structure HIGH, identity MEDIUM.</description>
+      <table type="X Axis" name="ECT" storagetype="float" endian="big" sizex="16" storageaddress="CEB64">
+        <scaling units="C" expression="x" format="#" />
+      </table>
+    </table>
+  </rom>
+</roms>
