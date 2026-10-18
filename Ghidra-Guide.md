@@ -136,9 +136,9 @@ Scripts are in `~/workspace/tools/ghidra_scripts/`:
 
 ### XmlToIdc-Equivalent: Ghidra Label Importer (In Progress)
 
-A script to import all 602 RomRaider table definitions as Ghidra labels — data addresses, X/Y axes, and table directory entries. This turns disassembly from "what is this address?" into reading labeled functions.
+A script to import all 863 RomRaider table definitions as Ghidra labels — data addresses, X/Y axes, and table directory entries. This turns disassembly from "what is this address?" into reading labeled functions.
 
-**Status:** Table inventory JSON built and validated (602 tables, strict-parse clean). Ghidra label API being researched. Script in development.
+**Status:** Table inventory JSON built and validated (863 tables, strict-parse clean). Ghidra label API being researched. Script in development.
 
 **Why it matters:** Every prior disassembly task (knock trace, fuel trace, dispatcher analysis) was done by manually cross-referencing hex addresses against XML files. With labels, future work is dramatically faster.
 

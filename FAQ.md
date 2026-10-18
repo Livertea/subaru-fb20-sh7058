@@ -44,10 +44,10 @@ See [Contributing](Contributing.md) for details. No hardware required.
 
 ## What's the difference between 0.3 and 0.3.1a?
 
-- **0.3** is a full definition (488 tables) — load this as your base
-- **0.3.1a** through **0.3.1g** are letter files with only new tables — load these *in addition to* 0.3
+- **0.7** is a full definition (863 tables) — load this as your base
+- **0.3.1a** through **0.3.1u** are letter files with only new tables — load these *in addition to* an older base if you want to validate tables individually
 
-Letter files let you validate new tables separately before they're merged into the next full revision. Total across all files: **602 tables**.
+Letter files let you validate new tables separately before they're merged into the next full revision. Total across all files: **863 tables**.
 
 ## Why are some tables marked "(Unverified)"?
 
@@ -67,15 +67,15 @@ The likely culprits are mapped:
 
 But: **not validated yet.** Don't change these until logger data confirms the relationship.
 
-## Why 602 tables? My WRX definition has 2,000+.
+## Why 863 tables? My WRX definition has 2,000+.
 
 The WRX definition you're thinking of likely includes:
-- Many more DTC switches (we have 236; some defs have 400+)
+- Many more DTC switches (we have 243; some defs have 400+)
 - Per-gear variants of tables (our NA engine doesn't need these)
 - Boost control tables (we're naturally aspirated — no turbo)
 - Years of community additions
 
-Our 602 tables (157 3D · 181 2D · 28 1D · 236 Switch) cover the tables the ECU actually references. The dispatcher cross-reference found 238 additional 2D tables beyond the original directory analysis — most are now in letter files 0.3.1d–g. The WRX simply has a more complex calibration because it's turbocharged.
+Our 863 tables (260 3D · 333 2D · 34 1D · 236 Switch) cover the tables the ECU actually references. The dispatcher cross-reference plus the re-triage against fully-resolved call sites found tables missed through directory analysis alone — most are now merged. The WRX simply has a more complex calibration because it's turbocharged.
 
 ## Was this really built by AI?
 
@@ -87,7 +87,7 @@ This is disclosed because it affects how you should treat the output: with the s
 
 Not directly. The **methodology** ([Methodology](Methodology.md)) transfers, but no specific tables, addresses, or scalings will work on a different ROM.
 
-There is a nascent [Honda-Project](Honda-Project.md) applying the same approach to a Civic Si. It's v0.1 (2 tables) — proof of concept only.
+There is a nascent [Honda-Project](Honda-Project.md) applying the same approach to a Civic Si. It's v0.3 (92 tables) — early days, not for tuning.
 
 ## Who maintains this?
 

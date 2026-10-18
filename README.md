@@ -16,12 +16,15 @@ This is the documentation wiki for the **EP5GD00A open-source ECU definition pro
 | Page | Description |
 |------|-------------|
 | [Home](Home.md) | Project overview, current status, key breakthroughs |
+| [FB20-Tuning-Guide](FB20-Tuning-Guide.md) | What tuning can actually do on the FB20, what's safe to change |
+| [Porting-Guide](Porting-Guide.md) | How this work transfers to other engines/cars, closest first |
+| [Collaborate](Collaborate.md) | What's needed, workflow conventions, how to reach out |
 | [Methodology](Methodology.md) | The table-hunting workflow — a guide for other Denso ROMs |
-| [Table-Reference](Table-Reference.md) | All 602 tables by category |
-| [DTC-Mapping](DTC-Mapping.md) | The P-code breakthrough — 236 DTC switches decoded |
+| [Table-Reference](Table-Reference.md) | All 863 tables by category |
+| [DTC-Mapping](DTC-Mapping.md) | The P-code breakthrough — 243 DTC switches decoded |
 | [Ghidra-Guide](Ghidra-Guide.md) | Disassembly setup and findings |
 | [Definitions](Definitions.md) | Download the XML definition files |
-| [Honda-Project](Honda-Project.md) | Cross-platform work — first open-source Honda SH7058 def |
+| [Honda-Project](Honda-Project.md) | Cross-platform work — Honda SH7058 definition |
 | [Contributing](Contributing.md) | How to help validate and expand |
 | [FAQ](FAQ.md) | Common questions |
 
@@ -34,11 +37,13 @@ This is the documentation wiki for the **EP5GD00A open-source ECU definition pro
 
 ## Status
 
-**602 tables mapped. Zero hardware-validated.** This is exploratory research — see the validation disclaimer on [Home](Home.md).
+**863 tables mapped. Zero hardware-validated.** This is exploratory research — see the validation disclaimer on [Home](Home.md).
+
+> *"Because of the resources that it took to generate all of this, it would be greed and almost gluttony to not share for public good."* — Johnathon, on why this is open source
 
 ## Maintenance
 
-The original author is unlikely to actively maintain this going forward. This wiki is provided as-is. If the community wants to correct, expand, or take over — you're welcome to. That's why it's public.
+The original author is taking a break from active work but plans to return for hardware validation (~Nov 6, 2026). Collaborators are wanted in the meantime — see [Collaborate](Collaborate.md). This wiki is provided as-is. If the community wants to correct, expand, or take over — you're welcome to. That's why it's public.
 
 ## License
 

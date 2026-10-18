@@ -34,12 +34,12 @@ No tuning definition existed for this ECU. The closest public reference was a de
 
 | Metric | Value |
 |--------|-------|
-| **Tables mapped** | **602** |
-| **Current full revision** | 0.3 (488 tables) |
-| **Letter files** (pending validation) | 0.3.1a (19), 0.3.1b (2), 0.3.1c (4), 0.3.1d (1), 0.3.1e (5), 0.3.1f (5), 0.3.1g (78) |
-| **DTC switches mapped** | 236 P-codes |
+| **Tables mapped** | **863** |
+| **Current full revision** | 0.7 (863 tables) |
+| **Letter files** (merged into v0.7) | 0.3.1a (19), 0.3.1b (2), 0.3.1c (4), 0.3.1d (1), 0.3.1e (5), 0.3.1f (5), 0.3.1g (78), 0.3.1h–t (165), 0.3.1u (101) |
+| **DTC switches mapped** | 243 P-codes |
 | **Disassembly** | Ghidra environment working, key subsystems traced |
-| **GitHub** | [Livertea/subaru-fb20-sh7058](https://github.com/Livertea/subaru-fb20-sh7058) |
+| **GitHub** | [Livertea/subaru-fb20-sh7058](https://github.com/Livertea/subaru-fb20-sh7058) (currently private — reopening after review) |
 
 ### ⚠️ Validation Status
 
@@ -56,9 +56,9 @@ The plan:
 
 ## Maintenance Note
 
-**The original author will likely not be actively maintaining this project going forward.**
+**The original author is taking a break from active work on this project**, but plans to return for hardware validation once the cable arrives (~Nov 6, 2026).
 
-This wiki is a snapshot of exploratory research. If you find errors, want to expand the coverage, or want to take over maintenance — please do. That's why it's public. See [Contributing](Contributing.md) for how to help.
+In the meantime: collaborators wanted. If you find errors, want to expand the coverage, or want to help validate — please do. That's why it's public. See [Collaborate](Collaborate.md) for what's needed most and [Contributing](Contributing.md) for how to help.
 
 ---
 
@@ -72,19 +72,25 @@ See [Methodology](Methodology.md) for the full workflow.
 
 ## Key Breakthroughs
 
-- **DTC P-code mapping** — All 236 diagnostic trouble code switches mapped via the descriptor table, without disassembly. See [DTC-Mapping](DTC-Mapping.md).
+- **DTC P-code mapping** — All 243 diagnostic trouble code switches mapped via the descriptor table, without disassembly. See [DTC-Mapping](DTC-Mapping.md).
 - **Volumetric Efficiency resolved** — 84 VE tables identified (the FB20 is speed-density, not MAF-based like the WRX).
-- **Table dispatcher found** — The firmware's central table lookup at `0xBE964` with 479 call sites. See [Ghidra-Guide](Ghidra-Guide.md).
+- **Table dispatcher found** — The firmware's central table lookup at `0xBE964` with ~479 call sites, plus a **second** dispatcher at `0xBEA18` (182 sites) whose type byte selects the data type — including float32 tables. See [Ghidra-Guide](Ghidra-Guide.md) and [Second-Dispatcher](Second-Dispatcher.md).
 - **X-tau transient fueling** — 12-table system identified, trigger condition found via disassembly.
-- **Honda SH7058** — The methodology was applied to a Honda Civic Si ROM, producing the first open-source Honda SH7058 definition. See [Honda-Project](Honda-Project.md).
+- **Honda SH7058** — The methodology was applied to a Honda Civic Si ROM, producing an open-source Honda SH7058 definition (92 tables). See [Honda-Project](Honda-Project.md).
 - **Gen 1 cross-reference** — Compared against SH7055 (2003–2010) definitions: 16 of 28 scaling formulas are character-identical across 8 years. Denso froze the physics, only changed data representation.
-- **XmlToIdc-equivalent for Ghidra** — In progress: a script to import all 602 tables as Ghidra labels, making future disassembly dramatically faster.
+- **Re-triage: 101 more tables** — Re-running the missing-table triage against the fully-resolved secondary-dispatcher call sites found 101 tables the first hunt missed (87 uint16 + 14 float32), merged as v0.7. The hunt used code references, not aesthetics: if the dispatcher references it, it's a table.
+- **Tip-in enrichment resolved** — 16×8, X = ECT, Y = time-since-tip-in, scale 1/256, unit % enrichment (not ms). The directory dims were another instance of "the directory lies."
+- **Checksum: no boot gate** — The checksum routine (ROM 0x152, 8-bit one's-complement sum) is a reflash-protocol tool, not a boot check. The ECU does not verify a ROM checksum at boot. This was the last flashing blocker; it's lifted.
+- **XmlToIdc-equivalent for Ghidra** — In progress: a script to import all 863 tables as Ghidra labels, making future disassembly dramatically faster.
 
 ## Quick Links
 
 - [Definitions](Definitions.md) — Download the XML files
 - [Table-Reference](Table-Reference.md) — What's been mapped, by category
 - [Methodology](Methodology.md) — How to hunt tables yourself
+- [FB20-Tuning-Guide](FB20-Tuning-Guide.md) — What tuning can actually do on this engine
+- [Porting-Guide](Porting-Guide.md) — How this transfers to other cars
+- [Collaborate](Collaborate.md) — What's needed, how to help
 - [Contributing](Contributing.md) — How to help validate
 - [FAQ](FAQ.md) — Common questions
 
@@ -96,9 +102,17 @@ See [Methodology](Methodology.md) for the full workflow.
 | 2026-10-18 | DTC P-code mapping cracked (236 codes). |
 | 2026-10-18 | Definition v0.1 through v0.2.6 built iteratively. |
 | 2026-10-18 | v0.3 released (488 tables). |
+| 2026-10-18 | v0.4 released (628 tables). |
+| 2026-10-18 | v0.5 released (755 tables). |
 | 2026-10-18 | Ghidra disassembly phase begins. Dispatcher, knock, fuel subsystems traced. |
-| 2026-10-18 | First open-source Honda SH7058 definition built (v0.1). |
-| 2026-10-18 | Letter files 0.3.1d–g released (89 tables). Total: 602. |
+| 2026-10-18 | Honda SH7058 definition built (v0.1, 2 tables; later v0.3, 92 tables). |
+| 2026-10-18 | Letter files 0.3.1a–s released. Total: 755. |
+| 2026-10-18 | Letter file 0.3.1t released (8 tables, disassembly-verification finds). |
+| 2026-10-18 | v0.6 released (763 tables). Disassembly verification track complete — 0 phantoms, 8 verification tables merged. Table hunt closed. |
+| 2026-10-18 | Re-triage: 101 more tables found via secondary-dispatcher call sites (letter 0.3.1u). Type byte = data type discovered (type-0 = float32). |
+| 2026-10-18 | Checksum hunt resolved: routine at ROM 0x152, no boot-time enforcement — flashing blocker lifted. |
+| 2026-10-18 | v0.7 released (863 tables). 4 byte-level corrections applied (Base Timing B 13×17 @0xCCA3A, CL Fuel Comp C +2 bytes, Target Throttle A +4 bytes, tip-in A/B resolved 16×8). Table hunt remains closed (~97% of ~875–900). |
+| 2026-10-18 | Defeat-device screen: clean (no timer-gated switches, no test-cell gating). Misc-table musings pass complete (feedback-controller, delta-T, fan-threshold hypotheses). |
 | 2026-10-18 | Gen 1 (SH7055) cross-reference complete. 16/28 scalings identical. |
 | 2026-10-18 | GitHub repo published: Livertea/subaru-fb20-sh7058 (CC BY-NC-SA 4.0). |
 | 2026-10-18 | XmlToIdc-equivalent Ghidra label script in development. |

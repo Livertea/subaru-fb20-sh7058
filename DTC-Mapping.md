@@ -11,9 +11,9 @@
 
 ## The Breakthrough
 
-All **236 diagnostic trouble code (DTC) enable/disable switches** in the EP5GD00A ROM were mapped with their P-code labels — **without any disassembly**.
+All **243 diagnostic trouble code (DTC) enable/disable switches** in the EP5GD00A ROM were mapped with their P-code labels — **without any disassembly**.
 
-This was done by decoding the DTC descriptor table, a method that appears to be novel (no prior published documentation of this technique for Denso ECUs was found).
+This was done by decoding the DTC descriptor table — a method we haven't seen documented elsewhere for Denso ECUs (if prior art exists, we'd like to know).
 
 ## How It Works
 
@@ -48,7 +48,9 @@ The mapping was validated by checking known codes:
 - **P0455** (EVAP Large Leak) → Switch 214, **enabled** ✅
   - This is the car's actual current diagnostic code
 
-**Result:** 160 enabled / 76 disabled out of 236 total.
+**Result:** 160 enabled / 83 disabled out of 243 total.
+
+> **Mapping completeness (verified by independent ROM parse, 2026-10-18):** the descriptor table is **245 entries** (indices 0–244), not 309 — beyond index 244 the format changes completely (a different data structure, not more descriptors). All 245 switch bytes are clean 0x00/0x01. **243/243 real P-codes are in the definition**; the 2 excluded are indices 70–71, both P0000 placeholders (correctly excluded). 7 entries are genuine **second descriptors** for duplicate P-codes (P0340, P0452, P0453, P0451, P0441, P2419, P2420) with **independent** switch states — e.g. P0340: index 3 disabled / index 132 enabled. Correctly mapped as separate switches.
 
 ## Notable Codes
 
@@ -62,14 +64,14 @@ The mapping was validated by checking known codes:
 
 ## The Full Mapping
 
-The complete CSV with all 236 codes is available:
+The complete CSV with all 243 codes:
 
-- **File:** `dtc_pcode_mapping.csv`
+- **File:** `dtc_pcode_mapping.csv` — ⚠️ currently has 236 rows; needs regenerating with the 7 duplicate-P-code entries
 - **Columns:** P-Code, Switch Index, State (1=enabled/0=disabled), Descriptor Address
 
 ## In the Definition
 
-All 236 DTC switches are included in the RomRaider definition as Switch-type tables, named with their P-code (e.g., `(P0420) DTC`). They appear under the DTC category in RomRaider.
+All 243 DTC switches are included in the RomRaider definition as Switch-type tables, named with their P-code (e.g., `(P0420) DTC`). They appear under the DTC category in RomRaider.
 
 ## ⚠️ A Note on Disabling Codes
 

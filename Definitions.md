@@ -28,6 +28,37 @@ This project uses semantic versioning `X.X.X`:
 
 ## Current Releases
 
+### v0.7 — Full Definition (863 tables)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.7.xml` |
+| **Tables** | 863 |
+| **Date** | 2026-10-18 |
+| **Status** | Current full revision |
+
+**What's new in 0.7** (from 0.6):
+- +101 tables from letter file 0.3.1u (87 uint16 + 14 float32) — found by re-running the missing-table triage against the 169 resolved secondary-dispatcher call sites
+- **New structural discovery:** the secondary dispatcher's type byte selects the *data type* — type-0 = float32 tables with scaling passthrough (14 of the new tables)
+- −1 table: 0.3.1t's "Unknown 2D @0xCDE30" was wrong (misread a float RPM axis as data), superseded by the 9×9 float table @0xCDE54
+- 4 byte-level corrections: Base Timing B → 13×17 @0xCCA3A (old 13×13 was a window into it); CL Fueling Target Comp C 0xD3946 → 0xD3948; Target Throttle A 0xF9240 → 0xF923C (X axis 0xF9148 → 0xF9144); tip-in A/B resolved to 16×8, X=ECT, Y=time-since-tip-in, scale 1/256, % enrichment
+- Breakdown: 260 3D · 333 2D · 34 1D · 236 Switch (functional switch count 243, incl. 7 DTC switches typed 2D)
+- Coverage: ~97% of revised ~875–900 universe. Table hunt remains closed.
+
+### v0.6 — Full Definition (763 tables)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.6.xml` |
+| **Tables** | 763 |
+| **Date** | 2026-10-18 |
+| **Status** | Superseded — current is v0.7 (863 tables) |
+
+**What's new in 0.6** (from 0.5):
+- +8 tables from letter file 0.3.1t (found by the disassembly verification track)
+- Verification track complete: direct diff of all 763 XML addresses against the 832-entry directory, both dispatchers, and 2,392 direct flash refs — **0 phantoms**
+- Breakdown: 159 3D · 327 2D · 34 1D · 243 Switch (functional switch count)
+
 ### v0.3 — Full Definition (488 tables)
 
 | | |
@@ -35,7 +66,7 @@ This project uses semantic versioning `X.X.X`:
 | **File** | `RR_EP5GD00A_0.3.xml` |
 | **Tables** | 488 |
 | **Date** | 2026-10-18 |
-| **Status** | Current full revision |
+| **Status** | Superseded — current is v0.7 (863 tables) |
 
 **What's new in 0.3** (from 0.2.6):
 - 10× Tip-in Enrichment Compensation (ECT) — D2000 family
@@ -140,7 +171,20 @@ This project uses semantic versioning `X.X.X`:
 
 **Contents:** Bulk 2D triage from dispatcher cross-reference — 78 validated tables from the 238-table dispatcher discovery. All physically spot-verified against ROM bytes.
 
-**Running total: 602 tables** (488 + 19 + 2 + 4 + 1 + 5 + 5 + 78).
+**Running total: 763 tables** (628 in v0.4 + 78 + 42 + 7 from letters q, r, s, merged in v0.5; +8 from letter 0.3.1t, merged in v0.6).
+
+### v0.3.1u — Letter File (101 tables)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.3.1u.xml` |
+| **Tables** | 101 (new only) |
+| **Date** | 2026-10-18 |
+| **Status** | Merged in v0.7 |
+
+**Contents:** Re-triage of the 162 unique secondary-dispatcher directory entries (169 resolved call sites as code-ref source). 87 uint16 + 14 float32 (type-0) tables, all marked Unverified with call-site evidence. Uses real directory scale/offset, not the x/32768 placeholder. 20 candidates rejected (flat/zeros/alternating), 3 rejected as bogus/stale directory entries, 4 conflicts adjudicated as corrections to existing tables.
+
+**Running total: 863 tables** (763 in v0.6 + 101 − 1 superseded, merged in v0.7).
 
 ---
 
