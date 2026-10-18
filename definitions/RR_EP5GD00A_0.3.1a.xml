@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<roms>
+  <rom>
+    <romid>
+      <xmlid>EP5GD00A_0.3.1a</xmlid>
+      <internalidaddress>2004</internalidaddress>
+      <internalidstring>EP5GD00A</internalidstring>
+      <year>2012</year>
+      <market>USDM</market>
+      <make>Subaru</make>
+      <model>Impreza</model>
+      <submodel>2.0i Sport</submodel>
+      <transmission>MT</transmission>
+      <memmodel>SH7058</memmodel>
+      <flashmethod>subarucan</flashmethod>
+      <filesize>1024kb</filesize>
+    </romid>
+    <table type="3D" name="Mode Lookup 4x6 A (Unverified)" category="Misc" storageaddress="D3DE8" storagetype="uint16" endian="big" sizex="4" sizey="6">
+      <scaling units="Raw" expression="x" to_byte="x" format="#" fineincrement="1" coarseincrement="10" />
+      <table type="X Axis" storageaddress="D3DC0" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+      <table type="Y Axis" storageaddress="D3DD0" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+    </table>
+    <table type="3D" name="Mode Lookup 4x6 B (Unverified)" category="Misc" storageaddress="D3E40" storagetype="uint16" endian="big" sizex="4" sizey="6">
+      <scaling units="Raw" expression="x" to_byte="x" format="#" fineincrement="1" coarseincrement="10" />
+      <table type="X Axis" storageaddress="D3E18" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+      <table type="Y Axis" storageaddress="D3E28" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+    </table>
+    <table type="3D" name="Mode Lookup 4x6 D (Unverified)" category="Misc" storageaddress="D3EF0" storagetype="uint16" endian="big" sizex="4" sizey="6">
+      <scaling units="Raw" expression="x" to_byte="x" format="#" fineincrement="1" coarseincrement="10" />
+      <table type="X Axis" storageaddress="D3EC8" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+      <table type="Y Axis" storageaddress="D3ED8" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+    </table>
+    <table type="3D" name="Mode Lookup 4x6 E (Unverified)" category="Misc" storageaddress="D3F48" storagetype="uint16" endian="big" sizex="4" sizey="6">
+      <scaling units="Raw" expression="x" to_byte="x" format="#" fineincrement="1" coarseincrement="10" />
+      <table type="X Axis" storageaddress="D3F20" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+      <table type="Y Axis" storageaddress="D3F30" storagetype="float" endian="big">
+        <scaling units="Index" expression="x" to_byte="x" format="0" fineincrement="1" coarseincrement="1" />
+      </table>
+    </table>
+    <table type="3D" name="Knock/Timing Table @0xCC8FA (Unverified)" category="Knock" storageaddress="CC8FA" storagetype="uint16" endian="big" sizex="8" sizey="10">
+      <scaling units="Raw" expression="x" to_byte="x" format="#" fineincrement="1" coarseincrement="10" />
+      <table type="X Axis" storageaddress="CA550" storagetype="float" endian="big">
+        <scaling units="Engine Load (g/rev)" expression="x" to_byte="x" format="0.00" fineincrement="1" coarseincrement="1" />
+      </table>
+      <table type="Y Axis" storageaddress="CA4E8" storagetype="float" endian="big">
+        <scaling units="RPM" expression="x" to_byte="x" format="#" fineincrement="1" coarseincrement="1" />
+      </table>
+    </table>
+    <table type="1D" name="Knock Feedback Retard Value (Unverified)" category="Knock" storageaddress="D4A70" storagetype="float" endian="big">
+      <scaling units="Degrees" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Feedback Retard Value B (Unverified)" category="Knock" storageaddress="D4A78" storagetype="float" endian="big">
+      <scaling units="Degrees" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Feedback ECT Threshold High (Unverified)" category="Knock" storageaddress="D4A80" storagetype="float" endian="big">
+      <scaling units="Degrees C" expression="x" to_byte="x" format="0" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Feedback ECT Threshold Low (Unverified)" category="Knock" storageaddress="D4A84" storagetype="float" endian="big">
+      <scaling units="Degrees C" expression="x" to_byte="x" format="0" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Feedback Negative Advance (Unverified)" category="Knock" storageaddress="D4A88" storagetype="float" endian="big">
+      <scaling units="Degrees" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Feedback Advance (Unverified)" category="Knock" storageaddress="D4A8C" storagetype="float" endian="big">
+      <scaling units="Degrees" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Feedback Step Size (Unverified)" category="Knock" storageaddress="D4A90" storagetype="float" endian="big">
+      <scaling units="Degrees" expression="x" to_byte="x" format="0.0000" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Advance Step Param A (Unverified)" category="Knock" storageaddress="D4AC4" storagetype="float" endian="big">
+      <scaling units="Unknown" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Advance Step Param B (Unverified)" category="Knock" storageaddress="D4AC8" storagetype="float" endian="big">
+      <scaling units="Unknown" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Advance Step Param C (Unverified)" category="Knock" storageaddress="D4ACC" storagetype="float" endian="big">
+      <scaling units="Unknown" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Advance Step Param D (Unverified)" category="Knock" storageaddress="D4AD0" storagetype="float" endian="big">
+      <scaling units="Unknown" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Extended Retard A (Unverified)" category="Knock" storageaddress="D4B24" storagetype="float" endian="big">
+      <scaling units="Degrees" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Extended Retard B (Unverified)" category="Knock" storageaddress="D4B28" storagetype="float" endian="big">
+      <scaling units="Degrees" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+    <table type="1D" name="Knock Extended Retard Value (Unverified)" category="Knock" storageaddress="D4B2C" storagetype="float" endian="big">
+      <scaling units="Degrees" expression="x" to_byte="x" format="0.00" fineincrement="0.01" coarseincrement="0.1" />
+    </table>
+  </rom>
+</roms>
