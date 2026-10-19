@@ -10,6 +10,7 @@
 
 **Validation**
 - [Emulation-Validation](Emulation-Validation.md)
+- [Emulator](Emulator.md)
 - [Methodology](Methodology.md)
 - [Avoiding-Hallucinations](Avoiding-Hallucinations.md)
 

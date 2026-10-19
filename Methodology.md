@@ -85,7 +85,21 @@ Three independent methods were run to convergence: main-dispatcher call sites (4
 
 Five agents were each given a philosophical angle and explicit autonomy to test a theory — including overturning "closed" labels. They did: the "not a table" verdict on 0xD0000 was wrong (it's a shared structure with 17 directory refs), and the second dispatcher exists (dismissed earlier). They also produced hard negative findings (Requested Torque Base doesn't exist; injector flow scalar doesn't exist) and resolved the base-timing scaling dispute (`x*0.1`, not `x*0.05`). **The process that assumes the last conclusion was wrong is the one that got it right.**
 
-### Stage 7 — Documentation and seeding (this wiki)
+### Stage 8 — Emulation (answering "what does the code compute?")
+
+A purpose-built SH-2A interpreter (`ecu-tools/emu/`, 95/95 tests) executes the ECU's real table-lookup code. See [Emulator](Emulator.md) for the full story and [Emulation-Validation](Emulation-Validation.md) for batch results.
+
+New capabilities added 2026-10-18:
+- **Taint tracking** — mark a RAM address (e.g., MAF), run code, see everywhere it flows. Turns "who uses X?" from a research project into a single run.
+- **Log playback** (`playback.py`) — feeds real OBD2 logs through the emulator, compares computed outputs against logged behavior. The closest thing to differential testing without a second ECU.
+- **RAM symbol table** (`symbols.py`) — 28 known addresses with confidence levels; traces print names instead of hex.
+
+Method lessons the emulator taught us:
+- **Delay slots hide writers.** The MAF writer sat in a delay slot after `rts` — invisible to static analysis, caught only by write watchpoints. Delay-slot checking is now mandatory for "zero writers" claims.
+- **Watchpoints beat static analysis** for "does X happen" questions.
+- **The emulator needs its own skepticism discipline.** A bug in the emulator gives wrong answers with the authority of "the real ROM code computed this."
+
+### Stage 9 — Documentation and seeding (this wiki)
 
 Computation-flow docs (fuel/timing/DBW algorithms, not just tables), a LaTeX reference skeleton, the DTC mapping writeup, and the checksum hunt — which resolved the last flashing blocker: the ECU does **not** verify a ROM checksum at boot (the checksum routine is a reflash-protocol tool, not a boot gate).
 

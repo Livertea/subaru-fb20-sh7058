@@ -29,8 +29,14 @@ The obvious tool for CPU emulation — [Unicorn](https://www.unicorn-engine.org/
 The interpreter lives in `ecu-tools/emu/`:
 
 - **`cpu.py`** (~650 lines): full SH-2A interpreter — integer ops (mov, arithmetic, shifts, branches with delay slots, jsr/rts), FPU (fmov.s, fadd/fsub/fmul/fdiv, fcmp, float/ftrc, fmac, fsqrt), memory (1MB ROM read-only, 64KB RAM), and loud traps (`UnimplementedOpcode`, `EmulationTrap`) on anything it can't execute.
-- **`test_cpu.py`**: 77 unit tests covering every implemented opcode with edge cases. **77/77 pass.**
+- **`test_cpu.py`**: 95 unit tests covering every implemented opcode with edge cases. **95/95 pass** (grew from 77 as bugs were found and fixed — each fix added regression tests).
 - **`test_accept.py` / `test_accept_extended.py`**: dispatcher acceptance tests.
+- **`symbols.py`**: RAM symbol table — 28 known addresses with confidence levels, wired into trace logging.
+- **`playback.py`**: log playback — feeds real OBD2 CSV logs through the emulator as test vectors.
+
+See [Emulator](Emulator.md) for the full story: architecture, all bugs found and fixed, method lessons, limitations, and roadmap.
+
+Bugs fixed during development (beyond the two below): `0x8801` implemented as `cmp/eq #imm,R0` (a competing BLD hypothesis was refuted — see Emulator page), `fmov.s @(R0,Rm),FRn` RAM routing fixed, missing `not`/`div1`/`cmp/eq` implemented. One reported bug (`bf/s` 12-bit displacement) was **refuted as encoding-impossible** — the emulator was already correct.
 
 Two real CPU bugs were found and fixed during development:
 
@@ -107,8 +113,12 @@ With the entry points validated, tables were swept in batches through the emulat
 | B — Fuel | 14 fuel-path tables | 4 EMU-VALIDATED. **Two v0.7 bugs:** Fuel Multiplier A has 7 phantom rows (13×22 → record says 13×15); CL Fueling Target's AFR scaling produces impossible values (0.00 AFR) — it's a correction multiplier (0.64–1.00), not AFR. Fuel Multiplier B is likely a phantom (its data sits *inside* Fuel Mult A's region). |
 | C — Idle/Limiter/DBW | 31 tables | 23 EMU-VALIDATED, 3 code-confirmed. **v0.7 bug:** Requested Torque B copied FA08C's axes — the record points to different, correct ones (emulation proves it). |
 | D — Types + VE | Type 1/3/4 paths + 84 VE tables | Types 1/3 dead (zero records). **84/84 VE tables structure-validated** (42 std 12×11 + 42 hi 12×18, all dims/axes/data types match). Scaling unresolvable. |
+| E — Timing | 17 timing tables | 13 EMU-VALIDATED (Base Timing B/C/D, Ignition Dwell, Timing G–J, 5 comps). **v0.7 bug confirmed:** @0xCC8FA dims 10×8 → record says 8×13, emulation confirms 8×13. Timing Comp scaling `(x*0.3515625)-45` is EMU-VALIDATED + independently rediscovered. |
+| F — AVCS | 5 AVCS tables | All EMU-VALIDATED. **Sizex discrepancy resolved:** records say 15 columns, v0.7 said 14 — record is correct (v0.7 drops column 0). Exhaust tables are CODE-CONFIRMED live, not vestigial. |
+| G — Airflow | 7 airflow tables | 3 EMU-VALIDATED. **2 v0.7 bugs:** IAT axis wrong address, Unknown Multiplier 10×8 → 10×16. MAP Sensor Scaling has zero code refs (possibly dead). Load formula (g/s→g/rev) writer not found. |
+| H — Transient | 52 tables (EVAP, tip-in, warmup, cranking) | All EMU-VALIDATED. **EVAP is 6 tables, not 7.** 4 v0.7 mislabels corrected. New 30-el table discovered @0xC472C. Crank 32-byte structs fully decoded. |
 
-**Total: 34 tables in the verified core** (see [Verified-Core-Definition](Verified-Core-Definition.md)).
+**Total: 106 tables in the verified core** across 0.8 (34), 0.8.1a (18), and 0.8.2b (72, with AVCS overlap) — see [Verified-Core-Definition](Verified-Core-Definition.md).
 
 ### Key methodological findings
 

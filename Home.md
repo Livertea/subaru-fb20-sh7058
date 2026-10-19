@@ -40,7 +40,7 @@ No tuning definition existed for this ECU. The closest public reference was a de
 | **Letter files** (merged into v0.7) | 0.3.1a (19), 0.3.1b (2), 0.3.1c (4), 0.3.1d (1), 0.3.1e (5), 0.3.1f (5), 0.3.1g (78), 0.3.1h–t (165), 0.3.1u (101) |
 | **Letter files** (pending approval) | 0.7.1a (9 unknown tables), 0.7.1b (2), 0.7.1c (8), 0.8.1a (18 sweep-validated) |
 | **DTC switches mapped** | 243 P-codes (CSV regenerated 2026-10-18, incl. 7 duplicate-P-code second descriptors) |
-| **Emulation** | Phase 1 complete — purpose-built SH-2A/SH-2A-FPU interpreter, 77/77 unit tests pass |
+| **Emulation** | Purpose-built SH-2A interpreter, **95/95 unit tests pass** — see [Emulator](Emulator.md) for the full story |
 | **GitHub** | [Livertea/subaru-fb20-sh7058](https://github.com/Livertea/subaru-fb20-sh7058) (currently private — reopening after review) |
 
 ### The 0.8 Verified Core (2026-10-18)
@@ -96,7 +96,7 @@ See [Methodology](Methodology.md) for the full workflow.
 - **Re-triage: 101 more tables** — Re-running the missing-table triage against the fully-resolved secondary-dispatcher call sites found 101 tables the first hunt missed (87 uint16 + 14 float32), merged as v0.7. The hunt used code references, not aesthetics: if the dispatcher references it, it's a table.
 - **Tip-in enrichment resolved** — 16×8, X = ECT, Y = time-since-tip-in, scale 1/256, unit % enrichment (not ms). The directory dims were another instance of "the directory lies."
 - **Checksum: no boot gate** — The checksum routine (ROM 0x152, 8-bit one's-complement sum) is a reflash-protocol tool, not a boot check. The ECU does not verify a ROM checksum at boot. This was the last flashing blocker; it's lifted.
-- **Emulation-based validation** — A purpose-built SH-2A/SH-2A-FPU interpreter (77/77 tests) executes the ECU's real table-lookup code against candidate tables. Injector latency: 5/5 voltages bit-exact. The dispatcher ignores record scale/offset fields (proven, not assumed). See [Emulation-Validation](Emulation-Validation.md).
+- **Emulation-based validation** — A purpose-built SH-2A/SH-2A-FPU interpreter (95/95 tests) executes the ECU's real table-lookup code against candidate tables. Injector latency: 5/5 voltages bit-exact. The dispatcher ignores record scale/offset fields (proven, not assumed). Now with taint tracking, RAM symbol table (28 symbols), and log playback. See [Emulator](Emulator.md) and [Emulation-Validation](Emulation-Validation.md).
 - **0.8 verified core** — 34 tables that survived emulation/code/datalog validation, tier-tagged by evidence strength. The other ~590 v0.7 tables are *unverified*, not *wrong* — but they're not in 0.8 until they earn it. See [Verified-Core-Definition](Verified-Core-Definition.md).
 - **XmlToIdc-equivalent for Ghidra** — In progress: a script to import all 863 tables as Ghidra labels, making future disassembly dramatically faster.
 
@@ -134,6 +134,7 @@ See [Methodology](Methodology.md) for the full workflow.
 | 2026-10-18 | GitHub repo published: Livertea/subaru-fb20-sh7058 (CC BY-NC-SA 4.0). |
 | 2026-10-18 | Repo pulled private for personal-info scrub; reopening after review. |
 | 2026-10-18 | **Emulation project Phase 1 complete.** Purpose-built SH-2A/SH-2A-FPU interpreter (Unicorn doesn't support SuperH); 77/77 unit tests pass. Real dispatcher entry points identified (@0xBEA94 for u16, @0xBE964 for float32 1D); type 1/3 paths proven dead. |
+| 2026-10-18 | **Emulator expanded.** 95/95 tests. Taint tracking, RAM symbol table (28 symbols), log playback (`playback.py`), RAM range fix (64KB at 0xFFFF0000+). Bugs fixed: 0x8801 (`cmp/eq #imm,R0`), `fmov.s` RAM routing, missing `not`/`div1`. One reported bug (bf/s 12-bit displacement) refuted as encoding-impossible. See [Emulator](Emulator.md). |
 | 2026-10-18 | **0.8 verified-core definition released** (34 tables, tier-tagged: EMU-VALIDATED / CODE-CONFIRMED / HW-VALIDATED). Batch sweep added 18 more via 0.8.1a letter file. |
 | 2026-10-18 | **Independent-rediscoveries list compiled** — 22 findings we made first and third parties later confirmed (strongest: AVCS scaling triple-sourced across three chip generations; fan thresholds with six corroborating sources). |
 | 2026-10-18 | DTC CSV regenerated: 243/243 rows, 7 duplicate-P-code second descriptors included. |

@@ -26,8 +26,9 @@ Two tables are structurally validated but their scaling is **unresolvable by emu
 
 These stay out of 0.8 until hardware data arrives.
 
-### 3. Throttle Mechanism Unknown
-DBW Step 2 trace (2026-10-18) found **no code-referenced table lookup** for throttle mapping — every Target Throttle and Torque Limit table in the DBW region is a decoy (67% of DBW-region records unreferenced; requested-torque RAM has zero consumers). The real throttle mechanism is unknown (4 hypotheses, none confirmed). Throttle servo driver registers not identified. **Throttle remap has no tunable table in v0.7** — the tuning guide's throttle section needs this caveat.
+### 3. Throttle Mechanism — Partially Resolved (DBW Overturn 2026-10-18)
+**Update 2026-10-18:** the "decoy" verdict was **overturned**. The real Target Throttle function is `@0xBD65C` (found via indirect-call tracing the original campaign missed). TT-A/B/C are **CODE-CONFIRMED live and tunable** — `@0xBD65C` loads all three records and dispatches each via `@0xBEA18`, called 3× with r4=0/1/2. Requested torque RAM stays write-only (diagnostic output hypothesis holds).
+**Still open:** exact X/Y inputs to TT lookups (traced: X=pedal @0xFFFF8B70, Y=RPM @0xFFFF6B00 for r4=0; r4=1/2 use fixed constants), full output routing past @0xFFFF8C6C, what r4=0/1/2 selects, throttle servo driver still unlocated.
 
 ### 4. Knock Final Summation Point
 The knock subsystem is traced (feedback/fine/rough modes, IAM, retard limits) but the **final summation point** — where base timing + knock correction combine into the actual ignition command — was not found. IAM update mechanism unknown (3 hypotheses). Knock threshold is a hardware comparator, not a ROM table.
@@ -85,6 +86,14 @@ The GitHub repo is currently private while the author scrubs personal info and v
 
 ### 16. Threads Posts
 The announcement thread is 7 of 10 posts live (rate-limited until Oct 19); old-thread drafts 8–10 exist (post 10 must say **863 tables**). A new 6-post "rabbit hole went deeper" thread (v0.7 depth, break notice, wiki/collaboration invite) is drafted for manual posting.
+
+### 17. Emulator Open Work
+The emulator is functional (95/95 tests) but has known gaps — see [Emulator](Emulator.md) for the full roadmap:
+- **Invisible writers:** engine load (`0xFFFF66E4`, 69 readers) and RPM (`0xFFFF6988`, 246 readers) have zero identifiable writers through any standard store pattern. Likely computed addresses, ISRs, or DMA. The load formula (g/s→g/rev) is still an inference.
+- **No peripherals yet:** ADC, timer units, CAN, and interrupts are unmodeled. Can't boot the firmware or run the scheduler — every invocation needs hand-configured RAM.
+- **0x8801 resolved as `cmp/eq #imm,R0`** (a competing BLD hypothesis was refuted by immediate-distribution analysis), but the SH-2A manual should confirm the encoding.
+- **Rev limiter selection resolved:** no ECT-based mux exists — the three limiters (6700/6600, 5600/5500, 6500/6400) are independent scheduler functions, not a selection. The original "two RPM limits by ECT" hypothesis is dead.
+- **Queued:** peripheral stubs, scheduler execution, snapshot/restore, trace recording, interactive debugger, coverage tracking, differential testing vs Ghidra, symbolic execution, performance work.
 
 ## Further Out (Background Leads)
 - **2008 Corolla (NEC V850):** not SH7058, but the V850 is the direct predecessor of the RH850 — possible stepping stone for Gen-3 research.
