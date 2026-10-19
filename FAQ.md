@@ -89,6 +89,18 @@ Not directly. The **methodology** ([Methodology](Methodology.md)) transfers, but
 
 There is a nascent [Honda-Project](Honda-Project.md) applying the same approach to a Civic Si. It's v0.3 (92 tables) — early days, not for tuning.
 
+## Is VE actually used by the ECU?
+
+**Yes.** An early analysis concluded all 84 VE tables were dead (zero literal code references). That was wrong — the ECU reaches them through a pointer table at `0x6D89C` that holds dispatcher record addresses, which resolve to the VE tables. Byte-level chain proven: code → pointer table → records → tables. All 84 (42 standard 12×11 + 42 high-RPM 12×18) are structurally validated. **Caveat:** VE *scaling* is unresolved — the record's scale and the definition's scale give different physically-implausible answers, and emulation can't distinguish them. Structure yes, units pending dyno/MAF data.
+
+## Are the Knock Correction Advance tables real?
+
+**No — all five "Knock Correction Advance Max" tables (A–E) are fake.** Zero code references, zero dispatcher records, and impossible values (30–80° of advance). This ECU does not use the KCA×IAM architecture the older turbo ECUs do. The real knock system is three-mode (Feedback / Fine / Rough-IAM) with 25+ parameter tables and scalars, all disassembly-confirmed. The fake tables are quarantined, not tuned.
+
+## Can I remap the throttle?
+
+**Not via any table in the definition.** The DBW trace found the pedal → requested-torque path, but the requested-torque RAM value has **zero code consumers** — and 67% of the DBW-region dispatcher records are unreferenced. Every Target Throttle and Torque Limit table is a decoy. The real throttle mechanism is unknown (the servo driver wasn't located either). This is an honest negative: don't go looking for a throttle map that isn't there.
+
 ## Who maintains this?
 
 The original author is unlikely to actively maintain this going forward. The documentation is provided as-is. If you find errors or want to continue the work, you're welcome to — that's why it's public. See [Contributing](Contributing.md).

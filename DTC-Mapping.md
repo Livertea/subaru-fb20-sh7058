@@ -66,7 +66,7 @@ The mapping was validated by checking known codes:
 
 The complete CSV with all 243 codes:
 
-- **File:** `dtc_pcode_mapping.csv` — ⚠️ currently has 236 rows; needs regenerating with the 7 duplicate-P-code entries
+- **File:** `dtc_pcode_mapping.csv` — ✅ regenerated 2026-10-18: **243 rows** (245 descriptor entries minus indices 70–71, the P0000 placeholders). Regenerated directly from the ROM: descriptor table @0xA1431 (20-byte entries, P-code at bytes 3–4) cross-checked against the switch bank @0xA1338. All 236 previously-mapped rows verified byte-identical; the 7 new rows are the duplicate-P-code second descriptors (P0340 idx 3, P0452 idx 23, P0453 idx 24, P0451 idx 25, P0441 idx 179, P2419 idx 180, P2420 idx 181).
 - **Columns:** P-Code, Switch Index, State (1=enabled/0=disabled), Descriptor Address
 
 ## In the Definition

@@ -17,7 +17,7 @@ Tables mapped in the EP5GD00A definition, organized by category. Counts are from
 
 *Counted directly from `RR_EP5GD00A_0.7.xml`: 236 tables typed Switch plus 7 DTC switches typed 2D = 243 functional switches.*
 
-> **⚠️ Known issue:** Address 0xD487C has two tables claiming it ("Primary Open Loop Fueling Cruise" 10×16 and "Idle Airflow Decel Adder B" 11×10, same X axis). One is mislabeled. Also 0xD2798 ("Injector Correction C" and "Idle Speed Target G"). Found during automated inventory validation. Do not rely on these addresses until resolved.
+> **⚠️ Known issue:** Address 0xD2798 has two tables claiming it ("Injector Correction C" and "Idle Speed Target G"). Found during automated inventory validation. Do not rely on this address until resolved. (The old 0xD487C collision note is resolved — Idle Airflow Decel Adder B is confirmed at 0xD9758, not 0xD487C.)
 
 ---
 
@@ -40,6 +40,8 @@ The largest category. The FB20 is speed-density (not MAF-based like the WRX turb
 ### Closed-Loop Compensation
 - CL Fueling Target Compensation A–D (Load) @ 0xD34A6+
   - **Correction (v0.7):** Comp C was off by 2 bytes — data starts at **0xD3948**, not 0xD3946 (was reading the Y-axis tail as data)
+  - **⚠️ v0.7 scaling is wrong:** Comp C's AFR formula `(x*0.000224304213)-7.35` produces impossible values (0.00 AFR at x=32768). The data (20972–32670) reads as a **correction multiplier** via x/32768 → 0.64–1.00. Same issue likely affects the ECT variant. Do not tune with the AFR scaling.
+  - Only Comp C has a dispatcher record — A/B/D have zero refs (may be dead or pointer-table-accessed; unresolved)
 - CL Fueling Target Compensation (ECT) @ 0xC3FB0 — 16-el, AFR offset
 
 ### Transient Fueling (X-tau System)
@@ -59,15 +61,17 @@ The largest category. The FB20 is speed-density (not MAF-based like the WRX turb
 - ~28 Warmup Compensation (ECT) tables @ 0xD8ED6+ (0.3)
 - 5 Warmup Compensation Step tables @ 0xD9526+
 - Cranking Fuel tables (8)
-- Post-Start Enrichment @ 0xC07C4
+- **Post-Start Enrichment @0xC07C4** (11×29, X=ECT −30..20°C, Y=time 0..1400s, scale ÷1000) — EMU-VALIDATED (bilinear exact)
+  - **Hardware finding:** the car over-fuels on warmup — datalog shows STFT −8..−23% during warmup, settling to +0.7% hot. The enrichment table is the prime suspect for the first real tune (trim cold region −30–40%, target STFT −5..−10%).
+- Post-Start Decay Multiplier @0xCF0F0 — unresolved (non-standard struct, axis pointers don't match v0.7)
 
 ### Injectors
-- Injector Latency @ 0xD26A0 (2D, 5-el)
+- Injector Latency @ 0xD26A0 (2D, 5-el) — EMU-VALIDATED (5/5 voltages bit-exact through the real dispatcher). **Note:** the record is 5×2, not 5×1 — Y=[−600, 0], both rows byte-identical.
 - Injector Correction A–D @ 0xD26C0+ (16×3, ECT × Voltage)
 
 ### Fuel Multipliers
-- Fuel Multiplier A (3D) @ 0xC4AC0 — 13×15
-- Fuel Multiplier B (3D) @ 0xC4C10 — 13×22
+- **⚠️ Fuel Multiplier A (3D) @0xC4AC0 — v0.7 dims are wrong.** v0.7 says 13×22; the dispatcher record @0xB1E74 says **13×15** (X=load 150–750, Y=RPM 600–4000). v0.7's Y axis has 7 phantom rows (4400–6600) the code never reads. Do not tune the phantom rows.
+- **⚠️ Fuel Multiplier B @0xC4C10 — suspected phantom.** Its data address sits *inside* Fuel Multiplier A's data region (row 12, col 12). Do not tune. Needs code-reference investigation.
 
 ---
 
@@ -76,12 +80,13 @@ The largest category. The FB20 is speed-density (not MAF-based like the WRX turb
 ### Base Timing (6 maps)
 | Table | Address | Notes |
 |-------|---------|-------|
-| Base Timing A, C–F | 0xCCxxx range | Primary ignition maps |
+| Base Timing A | 0xCC7A0 | **🚫 PHANTOM** — byte-identical to the fake KCA E rows; not a real table. Flagged for removal from v0.7. |
+| Base Timing C–F | 0xCCxxx range | Primary ignition maps |
 | Base Timing B | 0xCCA3A | **13×17** (corrected in v0.7 — the old 13×13 was a window into this table; rows 0–2 have anomalous values, unexplained) |
 | Timing Maps G–J | 0xD72C4+ | 13×17 uint8, lower values (3–18°) — possibly correction/limit tables |
 
-- Scaling: `x * 0.1` → degrees
-- 6 base maps vs WRX's 4
+- Scaling: `x * 0.1` → degrees (idle point + FSM 14–16° window corroborate; highest-risk unverified item in v0.7)
+- Base Timing E/F — EMU-VALIDATED (Oct 2026 sweep)
 
 ### Timing Compensation
 - Timing Compensation (ECT) A–D
@@ -90,35 +95,41 @@ The largest category. The FB20 is speed-density (not MAF-based like the WRX turb
 
 ---
 
-## Knock Control (~40 tables)
+## Knock Control (~25 parameter tables + ranges)
 
-### Correction Tables
-- Knock Correction Advance Max A–E @ 0xCCxxx
-- Fine Correction Learning RPM Rows @ 0xD4AD8 — 7-el [1300–4400] RPM
-- Fine Correction Learning Load Columns @ 0xD4AF8 — 7-el [0.68–1.9] g/rev
+> **🚫 The "Knock Correction Advance Max A–E" tables in v0.7 are FAKE.** Five tables with zero code references, zero dispatcher records, and impossible values (30–80° of advance). This ECU does **not** use the KCA×IAM architecture. Do not tune them — they don't exist as far as the firmware is concerned. Flagged for removal from v0.7.
 
-### Parameters (Scalars)
-- IAM Initial @ 0xD4AB8 = 0.50
-- IAM Step @ 0xD4ABC = 0.25
-- Fine Correction Advance/Retard values and limits
-- Feedback Correction parameters (Cluster A)
-- Advance Step parameters (Cluster B)
+### Real Architecture: Three-Mode System (confirmed via disassembly)
 
-### Three-Mode Architecture (confirmed via disassembly)
-1. **Feedback Correction** — Immediate, per-event. Range A [1100–7000] RPM.
-2. **Fine Correction** — Learned, stored in RAM (0xFFFF8800). Range B [1500–3600] RPM.
-3. **Rough Correction / IAM** — Global multiplier. Range C [1300–4400] RPM.
+The actual knock system uses **25 parameter tables** (direct-read constants, no dispatcher records — the values are used as-is, no interpolation):
 
-See [Ghidra-Guide](Ghidra-Guide.md) for the function map.
+1. **Feedback Correction** — Immediate, per-event. RPM range [1100–7000].
+   - FB Retard Value @0xD4A70 = 5.0° (coarse), FB Retard Value B @0xD4A78 = 0.35° (fine)
+   - FB Advance @0xD4A8C = 0.10, FB Neg Advance @0xD4A88 = −0.10, FB Step Size @0xD4A90 = 0.0312
+   - ECT gates: High @0xD4A80 = 75°C, Low @0xD4A84 = −20°C
+2. **Fine Correction** — Learned, stored in RAM. RPM range [1500–3600].
+   - Fine Correction Learning RPM Rows @0xD4AD8 — 7-el [1300–4400] RPM
+   - Fine Correction Learning Load Columns @0xD4AF8 — 7-el [0.68–1.9] g/rev
+   - Knock Advance Step @0xD4AC0 = 0.0312, Step 2 @0xD4AD4 = 0.0625
+   - Knock Retard Limit @0xD4A6C = −7.0° (standard), Extended Retard A/B @0xD4B24/0xD4B28 = −5.0°/−10.0°
+3. **Rough Correction / IAM** — Global multiplier. RPM range [1300–4400].
+   - IAM Initial @0xD4AB8 = 0.50, IAM Step @0xD4ABC = 0.25
+
+**Mode hysteresis (new finding, Oct 2026):** Min/Max Load tables are 2-element [threshold, threshold+hysteresis] pairs — Min Load A @0xD4AA4 = [0.48, 0.50], Max Load A @0xD4AAC = [2.10, 2.20]. The mode activates at the first value and deactivates past the second. (Note: v0.7's campaign notes said 0.45 for Min Load A — the ROM reads 0.48, which is authoritative.)
+
+**Knock threshold is a hardware comparator**, not a ROM table — the knock signal and control registers live in peripheral space. There is no tunable knock-sensitivity table.
+
+All 25 tables ROM-validated (Oct 2026). See [Ghidra-Guide](Ghidra-Guide.md) for the function map.
 
 ---
 
 ## Idle Control (~20 tables)
 
-- **Idle Speed Targets A–N** (14 tables) — ECT-indexed, various conditions
-- Idle Airflow Decel Adder A @ 0xD4700 (16×9) — **this is the rev hang table**
-- Idle Airflow Decel Adder B @ 0xD487C
-- Idle Error Correction Multipliers @ 0xDF60C+
+- **Idle Speed Targets A–N** (14 tables) — ECT-indexed, various conditions. All 14 EMU-VALIDATED via the 1D dispatcher (Oct 2026 sweep).
+- **Idle Airflow Decel Adder A @0xD9720 + B @0xD9758 — these are the rev-hang tables.** 9-element 1D curves (Vehicle Speed axis), EMU-VALIDATED. The adder exists to smooth the clutch-in transition on decel — reducing it deletes rev hang, but zeroing it outright can cause decel stalling or harsh engine braking. Reduce, don't zero, on the first pass.
+- Idle Error Correction Multipliers A–C @0xDF60C/@0xDF6F8/@0xDF7E4 (9×9) — EMU-VALIDATED. Note: v0.7's axes for DF60C were wrong (listed DF6B0/DF6D4); correct axes are DF5C4/DF5E8 per the dispatcher record.
+- Idle Speed Stability A @0xDA52C + B @0xDA6F8 (16×11) — EMU-VALIDATED. (Duplicate axis blocks in ROM: v0.7 lists shared axes for B, the record uses different-but-byte-identical addresses. Functionally equivalent.)
+- Base Timing Idle @0xD4640 — EMU-VALIDATED.
 
 ---
 
@@ -132,9 +143,13 @@ See [Ghidra-Guide](Ghidra-Guide.md) for the function map.
 
 ## Throttle / Drive-by-Wire (~10 tables)
 
-- Target Throttle Plate Position A @ **0xF923C** (50×12 — corrected in v0.7, was off by 4 bytes; X axis @0xF9144), B @ 0xFAEF4 (50×19), C @ 0xF9800 (50×19)
-- Requested Torque A @ 0xFA08C, B @ 0xFA774
-- DBW chain: pedal → Requested Torque → Target Throttle
+> **🚫 Most DBW tables in v0.7 are decoys.** 14 of 21 DBW-region dispatcher records (67%) have zero code references, and the requested-torque RAM variable has zero consumers — the throttle servo is not driven by any tunable table in v0.7. The real throttle mechanism is unknown. Do not expect a throttle remap from these tables.
+
+- Target Throttle Plate Position A @ **0xF923C** (50×12 — corrected in v0.7, was off by 4 bytes; X axis @0xF9144), B @ 0xFAEF4 (50×19), C @ 0xF9800 (50×19) — all unreferenced, treat as decoys
+- Requested Torque A @0xFA08C (20×18) — EMU-VALIDATED
+- **⚠️ Requested Torque B @0xFA774 — v0.7 axes are wrong.** v0.7 copied FA08C's axes (FA374/FA3C4); the dispatcher record @0xB6F90 points to **FA6DC/FA72C**. Emulation proves the ECU uses the record's axes (X=7.0/Y=2400 → 3403 with record axes vs 456 with v0.7's).
+- Requested Torque Limit A @0xFB698 + B @0xFB79C — structurally valid and emulatable, but purpose-suspect (no consumers found). Validation confirms the definition matches the code, not that the ECU uses them.
+- DBW chain: pedal → Requested Torque → Target Throttle (Step 2 has no code-referenced table lookup — the link is missing)
 
 ---
 
@@ -150,11 +165,12 @@ See [Ghidra-Guide](Ghidra-Guide.md) for the function map.
 
 ## Limits (~15 tables)
 
-- Rev Limit (Fuel Cut)
-- Rev Limit Fuel Resume (MP) @ 0xC9848
-- Speed Limiting (Fuel Cut) A/B
-- Speed Limiting (Throttle) A–D @ 0xF8E44+
-- MAF Sensor Limit (Voltage) @ 0xD5EEC
+- Rev Limit (Fuel Cut) @0xCEA78 = [6700, 6600, 3800, 4000] — CODE-CONFIRMED (3 code refs incl. the limiter routine; mode-selected via RAM 0xFFFF6116)
+- **⚠️ Rev Limit Fuel Resume (MP) @0xC9848 — v0.7 decode is wrong.** Listed as uint16 1D with a psi scaling; the actual data is **float32** [760.0, 3500.0, 100.0, 6700.0], zero code refs. Mislabeled, purpose unknown.
+- Speed Limiting (Fuel Cut) B @0xCE6B0 = [200, 190, 0, 70] — CODE-CONFIRMED
+- Speed Limiting (Throttle) @0xCEB5C = [200, 210, −40, −30] — CODE-CONFIRMED
+- Speed Limiting (Throttle) A–D @0xF8E44+ — four byte-identical tables, zero refs. Dead weight, candidates for removal.
+- MAF Sensor Limit (Voltage) @0xD5EEC — dead (invalid record, zero refs)
 
 ---
 
@@ -234,6 +250,26 @@ The re-triage added 101 tables (87 uint16 + 14 float32 — the float tables use 
 - **Sparse regional corrections** (MEDIUM-LOW) — CD2AA/CD464 (± pair) + CC9CA + CCC40/CCDE8: each active in a different RPM/load island (0x7FF8 padding proves selective operation).
 
 **Known data-quality issues in v0.7** (under review, not yet fixed): ~15 tables show alternating-zero checkerboard data (probable dimension misidentification — values suspect until callers are disassembled); C4564 is two interleaved 25-el series, not one 50-el table.
+
+## Known v0.7 Errors
+
+Bugs found by the Oct 2026 emulation validation (running tables through the real ROM dispatcher code in the SH-2A emulator). All verified against ROM bytes — these are definition errors, not ROM errors. v0.8 excludes or corrects every one.
+
+| # | Table | Address | Error | Correct |
+|---|-------|---------|-------|---------|
+| 1 | Fuel Multiplier A | 0xC4AC0 | v0.7 says 13×22 — 7 phantom rows | **13×15** per record @0xB1E74 (Y=RPM 600–4000) |
+| 2 | Requested Torque B | 0xFA774 | v0.7 axes copied from FA08C | Axes **FA6DC/FA72C** per record @0xB6F90 |
+| 3 | CL Fueling Target Comp C | 0xD3948 | AFR scaling gives impossible 0.00–1.62 AFR | **Correction multiplier** x/32768 → 0.64–1.00 |
+| 4 | Rev Limit Fuel Resume | 0xC9848 | Labeled uint16/psi | Actually **float32** data, purpose unknown |
+| 5 | Idle Error Corr Mult A | 0xDF60C | v0.7 axes DF6B0/DF6D4 | Axes **DF5C4/DF5E8** per record |
+| 6 | Fuel Multiplier B | 0xC4C10 | Listed as real 5×13 table | **Suspected phantom** — data sits inside Fuel Mult A's region |
+
+**Fake/decoy tables in v0.7** (flagged, not yet removed):
+- 5× "Knock Correction Advance Max" A–E — zero code refs, impossible values (30–80°). This ECU has no KCA architecture.
+- Base Timing A @0xCC7A0 — byte-identical to fake KCA E rows (phantom).
+- Target Throttle A/B/C + Torque Limit A/B — 67% of DBW-region records unreferenced, no consumers. Decoys.
+- Main Tip-in A/B @0xD13D4/@0xD1474 — zero code refs; the active tip-in uses the Compensation tables.
+- MAF Limit @0xD5EEC, Baro Comp A/B — dead.
 
 ## Download
 

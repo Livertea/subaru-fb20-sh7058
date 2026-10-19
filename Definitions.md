@@ -28,7 +28,49 @@ This project uses semantic versioning `X.X.X`:
 
 ## Current Releases
 
+### v0.8 — Verified Core (34 tables)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.8.xml` |
+| **Tables** | 34 (verified only) |
+| **Date** | 2026-10-18 |
+| **Status** | Current verified revision — **start here** |
+
+v0.8 contains **only tables with independent verification evidence**, each tier-tagged. It is deliberately small: the other ~600 v0.7 tables are not in it because they haven't been verified yet, not because they're wrong.
+
+**Verification tiers:**
+- **EMU-VALIDATED** — swept through the real ROM dispatcher code in the SH-2A emulator; dims, axes, scaling, and interpolation match the definition within 1% across sampled inputs. Does *not* prove the table is physically correct (the dispatcher ignores scale/offset fields — scaling can still be wrong).
+- **CODE-CONFIRMED** — disassembly proves the firmware reads this table and the values match the definition.
+- **HW-VALIDATED** — confirmed against real datalogs from the car.
+- **ROM-VALIDATED** — ROM bytes match the definition (for direct-read constants with no dispatcher record — applies to scalar parameter tables).
+
+v0.8 started at 16 tables and grew to 34 via an 18-table emulation sweep. Tables deliberately excluded: the 5 fake KCA tables, Base Timing A (phantom), MAF Limit / Baro Comp (dead), DBW decoys, VE tables (structure validated, scaling unresolvable by emulation — needs dyno data), D7FEC (scaling is a physical question, not computational).
+
+See `RR_EP5GD00A_0.8_VERIFICATION.md` for the per-table evidence.
+
+### v0.8.1a — Letter File (18 tables)
+
+| | |
+|---|---|
+| **File** | `RR_EP5GD00A_0.8.1a.xml` |
+| **Tables** | 18 (new only — the sweep-validated additions to 0.8) |
+| **Date** | 2026-10-18 |
+| **Status** | Pending approval for merge into 0.8 |
+
+Standalone letter file with the 18 tables added by the batch emulation sweep (unknowns from 0.7.1a/b/c, Base Timing E/F, OL Fueling, AVCS tables). Load alongside 0.8 in RomRaider. See `RR_EP5GD00A_0.8.1a_README.md` for per-table evidence.
+
+### v0.7.1a / v0.7.1b / v0.7.1c — Unknown-Table Letter Files
+
+New-table letter files for user approval before merging (project convention: new tables ship in a letter file, get approved, then merge):
+
+- **0.7.1a** (9 tables) — Unknown tables with corrected scaling, incl. Unknown 16×3 @0xD335C (scaling fixed to `(x*1.5259e-05)-0.5`, cold-biased correction 0.00–0.12). Unknowns labeled plainly "Unknown + address" — speculation only in descriptions.
+- **0.7.1b** (2 tables) — Unknown 1×1 Correction (Cruise) @0xD496C + (Non-Cruise) @0xD4960. Low confidence.
+- **0.7.1c** (8 tables) — Unknown tables, scaling unverified: @0xCCD14 (9×8), @0xD6CC0/@0xD6E18/@0xD7824 (13×17 u8), @0xD6F50/@0xD7020/@0xD70F0/@0xD795C (12×10 u8).
+
 ### v0.7 — Full Definition (863 tables)
+
+> **⚠️ v0.7 has known errors.** It is the best full map of what's *in* the ROM, not a verified map of what the ECU *uses*. Emulation validation has found real bugs in v0.7 (wrong dims, wrong axes, wrong scalings) — see [Table-Reference](Table-Reference.md) § "Known v0.7 Errors." For tuning, prefer v0.8.
 
 | | |
 |---|---|

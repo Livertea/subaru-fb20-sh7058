@@ -39,6 +39,14 @@ These were set early and never broken:
 - **Bank finds, ask before merging.** Agents produced findings as standalone files. Merging into the numbered definition was a separate, explicit decision.
 - **Every claim carries its evidence.** Table entries got confidence labels (HIGH/MEDIUM/LOW); reports distinguished disassembled evidence from shape inference from open threads.
 
+### Standing principles
+
+These were learned the hard way and are now non-negotiable:
+
+- **Permanent skepticism.** No "CONFIRMED" or "RESOLVED" label is ever final. The project was one day old when this rule was set — long-running projects accumulate errors, and every claim stays open to refutation regardless of how long it has stood.
+- **The dispatcher record is ground truth.** When the directory, the definition, and the dispatcher record disagree on dims or axes, the record wins. The record is what the code reads. (Learned repeatedly: Fuel Multiplier A's phantom rows, Requested Torque B's copied axes, D335C's scaling.)
+- **Four-layer code-reference rule.** A table is only "dead" after checking all four layers: (1) literal references to the data address, (2) references to the dispatcher record, (3) pointer tables containing the record address, (4) code referencing those pointer tables. Literal xref scans alone are **insufficient** — the VE tables showed zero literal refs yet are live via a pointer table (`@0x6D89C`) → dispatcher records → tables. The "11% unreferenced records" figure is an upper bound until pointer-table indirection is accounted for.
+
 ### Stage 0 — Scouting (what's already out there)
 
 Before touching the ROM: collected reference definitions (WRX, Forester, BRZ), confirmed no public SH7058 ROM binary exists anywhere (all projects exclude ROMs for copyright), and found the one usable ROM — a 2022 RomRaider forum dump of the same CAL ID. First lesson, learned the hard way: **the CVT reference definition's addresses were garbage on the MT ROM. Blind porting was abandoned.** Names and scalings transfer; addresses never do.
@@ -222,6 +230,8 @@ The most powerful method, developed late in the project:
 
 This found hundreds of tables missed through directory analysis alone — and the re-triage against fully-resolved call sites is what closed the hunt.
 
+**The four-layer rule:** before concluding a table is dead/unreferenced, check all four layers — (1) literal refs to the data address, (2) refs to the dispatcher record, (3) pointer tables holding the record address, (4) code referencing those pointer tables. The VE tables proved literal scans miss layer 3–4 indirection.
+
 ### SH-2 Literal Pool Technique
 
 If you can't find the dispatcher yet, use this simpler approach:
@@ -266,6 +276,7 @@ Directory/Discovery → Physical Validation → Scaling Determination
 6. **Building from unverified reports** — Version 0.2.1b was built from a worker report without physical validation. Two out of three tables were broken. Never skip validation.
 7. **Rejecting on aesthetics** — "Sparse," "flat," or "weird-looking" data is not a rejection reason. Only a failed physical check or a missing code reference is.
 8. **Assuming one dispatcher** — We missed the second dispatcher for most of the project because we stopped looking after finding the first.
+9. **Calling a table dead from literal xrefs alone** — Always check all four layers (table → record → pointer table → code). The VE tables had zero literal references and were fully live.
 
 ## The Iron Law
 

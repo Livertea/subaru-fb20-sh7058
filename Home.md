@@ -34,23 +34,38 @@ No tuning definition existed for this ECU. The closest public reference was a de
 
 | Metric | Value |
 |--------|-------|
-| **Tables mapped** | **863** |
+| **Tables mapped** | **863** (627 data tables + 236 DTC switches) |
 | **Current full revision** | 0.7 (863 tables) |
+| **Verified core** | **0.8** — 34 tables, each tier-tagged (see below) |
 | **Letter files** (merged into v0.7) | 0.3.1a (19), 0.3.1b (2), 0.3.1c (4), 0.3.1d (1), 0.3.1e (5), 0.3.1f (5), 0.3.1g (78), 0.3.1h–t (165), 0.3.1u (101) |
-| **DTC switches mapped** | 243 P-codes |
-| **Disassembly** | Ghidra environment working, key subsystems traced |
+| **Letter files** (pending approval) | 0.7.1a (9 unknown tables), 0.7.1b (2), 0.7.1c (8), 0.8.1a (18 sweep-validated) |
+| **DTC switches mapped** | 243 P-codes (CSV regenerated 2026-10-18, incl. 7 duplicate-P-code second descriptors) |
+| **Emulation** | Phase 1 complete — purpose-built SH-2A/SH-2A-FPU interpreter, 77/77 unit tests pass |
 | **GitHub** | [Livertea/subaru-fb20-sh7058](https://github.com/Livertea/subaru-fb20-sh7058) (currently private — reopening after review) |
 
-### ⚠️ Validation Status
+### The 0.8 Verified Core (2026-10-18)
 
-**This is exploratory work. None of these tables have been validated on real hardware.**
+v0.7 is a map of what's **in** the ROM. 0.8 is the start of a map of what the ECU **uses** — every table in it has been validated by executing the ECU's own table-lookup code in a purpose-built SuperH emulator:
 
-The tables have been validated against the ROM bytes (structure, axes, scaling), and many are confirmed as code-referenced by the firmware (not dead data). But no one has flashed a modified ROM or confirmed behavior on a running engine.
+- **EMU-VALIDATED** — table dims, axes, and scaling confirmed by running the real dispatcher code (e.g., injector latency: 5/5 voltages bit-exact)
+- **CODE-CONFIRMED** — table referenced by disassembled code paths (rev limiter, fan thresholds, idle targets…)
+- **HW-VALIDATED** — confirmed against datalogs from the car (fan thresholds, idle targets)
 
-The plan:
-1. **Get the cable** → pull the actual ROM from the car
-2. **Validate** every table against real hardware via data logging
-3. **Only then** consider tuning
+34 tables so far. 0.8 deliberately excludes ~590 unverified tables, 5 fake knock tables, phantom/decoy tables, and anything whose scaling can't be resolved computationally (VE, D7FEC warmup trim — those need dyno data, not more emulation).
+
+See [Verified-Core-Definition](Verified-Core-Definition.md) and [Emulation-Validation](Emulation-Validation.md).
+
+### ⚠️ Validation Status — the honest version
+
+**No table has been validated on a running engine with a modified flash.** That's the line that matters.
+
+What we *have* done, in increasing order of strength:
+1. **ROM-structure validation** — every table verified against raw ROM bytes (dims, axes, scaling, no 0x7FF8 padding collisions).
+2. **Code-reference validation** — tables confirmed reachable from disassembled code (the four-layer check: table → record → pointer table → code).
+3. **Emulation validation** — the ECU's actual lookup routines executed against the tables; outputs match hand computation.
+4. **Datalog validation** — a handful of tables (idle targets, fan thresholds) confirmed against OBD2 logs from the car.
+
+What we have *not* done: flashed anything, or confirmed that changing a table changes engine behavior. Steps 1–3 validate that our *description* of the ROM is correct. Only hardware validation proves the *physical meaning*.
 
 **Do not flash anything based on these definitions yet.**
 
@@ -81,6 +96,8 @@ See [Methodology](Methodology.md) for the full workflow.
 - **Re-triage: 101 more tables** — Re-running the missing-table triage against the fully-resolved secondary-dispatcher call sites found 101 tables the first hunt missed (87 uint16 + 14 float32), merged as v0.7. The hunt used code references, not aesthetics: if the dispatcher references it, it's a table.
 - **Tip-in enrichment resolved** — 16×8, X = ECT, Y = time-since-tip-in, scale 1/256, unit % enrichment (not ms). The directory dims were another instance of "the directory lies."
 - **Checksum: no boot gate** — The checksum routine (ROM 0x152, 8-bit one's-complement sum) is a reflash-protocol tool, not a boot check. The ECU does not verify a ROM checksum at boot. This was the last flashing blocker; it's lifted.
+- **Emulation-based validation** — A purpose-built SH-2A/SH-2A-FPU interpreter (77/77 tests) executes the ECU's real table-lookup code against candidate tables. Injector latency: 5/5 voltages bit-exact. The dispatcher ignores record scale/offset fields (proven, not assumed). See [Emulation-Validation](Emulation-Validation.md).
+- **0.8 verified core** — 34 tables that survived emulation/code/datalog validation, tier-tagged by evidence strength. The other ~590 v0.7 tables are *unverified*, not *wrong* — but they're not in 0.8 until they earn it. See [Verified-Core-Definition](Verified-Core-Definition.md).
 - **XmlToIdc-equivalent for Ghidra** — In progress: a script to import all 863 tables as Ghidra labels, making future disassembly dramatically faster.
 
 ## Quick Links
@@ -115,5 +132,12 @@ See [Methodology](Methodology.md) for the full workflow.
 | 2026-10-18 | Defeat-device screen: clean (no timer-gated switches, no test-cell gating). Misc-table musings pass complete (feedback-controller, delta-T, fan-threshold hypotheses). |
 | 2026-10-18 | Gen 1 (SH7055) cross-reference complete. 16/28 scalings identical. |
 | 2026-10-18 | GitHub repo published: Livertea/subaru-fb20-sh7058 (CC BY-NC-SA 4.0). |
+| 2026-10-18 | Repo pulled private for personal-info scrub; reopening after review. |
+| 2026-10-18 | **Emulation project Phase 1 complete.** Purpose-built SH-2A/SH-2A-FPU interpreter (Unicorn doesn't support SuperH); 77/77 unit tests pass. Real dispatcher entry points identified (@0xBEA94 for u16, @0xBE964 for float32 1D); type 1/3 paths proven dead. |
+| 2026-10-18 | **0.8 verified-core definition released** (34 tables, tier-tagged: EMU-VALIDATED / CODE-CONFIRMED / HW-VALIDATED). Batch sweep added 18 more via 0.8.1a letter file. |
+| 2026-10-18 | **Independent-rediscoveries list compiled** — 22 findings we made first and third parties later confirmed (strongest: AVCS scaling triple-sourced across three chip generations; fan thresholds with six corroborating sources). |
+| 2026-10-18 | DTC CSV regenerated: 243/243 rows, 7 duplicate-P-code second descriptors included. |
+| 2026-10-18 | Letter files 0.7.1a/b/c released (19 unknown tables, banked for approval). |
+| 2026-10-18 | CAN validation scoped as Phase 3 (CSS Electronics skill assessed; CANable ~$40 verdict over CANsub.2's ~€400). |
 | 2026-10-18 | XmlToIdc-equivalent Ghidra label script in development. |
 | 2026-11-06 | *(Planned)* Cable arrives. ROM pull and hardware validation begins. |

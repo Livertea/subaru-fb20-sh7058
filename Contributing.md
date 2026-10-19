@@ -11,11 +11,9 @@
 
 ## Maintenance Note
 
-**The original author (Johnathon) will likely not be actively maintaining this project going forward.**
+**The original author is taking a break from active work on this project**, but plans to return for hardware validation once the cable arrives (~Nov 6, 2026).
 
-This documentation is provided as-is — a snapshot of exploratory research conducted in October 2026. If you find errors, want to expand the table coverage, or want to take over maintenance: **please do. That's why it's public.**
-
-This isn't abandonment — it's an invitation. The methodology is documented, the definitions are open, and the ROM is out there. If this work is useful to you, you're welcome to run with it.
+In the meantime: collaborators wanted. If you find errors, want to expand the coverage, or want to help validate — please do. That's why it's public.
 
 The hope is simple: that something here is of use to someone, somewhere — maybe even ten years from now. A kid with a beat-up 2012 Impreza and no budget finds this repo, and the tables save them months. The methodology gets reused on ROMs nobody's touched yet. That's why it's public.
 
@@ -84,6 +82,7 @@ These aren't optional — they keep the project coherent:
 3. **Every table** gets a confidence label: HIGH, MEDIUM, LOW, or (Unverified).
 4. **Physical validation is mandatory.** No table enters a definition without ROM byte verification.
 5. **Emissions equipment stays.** No contributions that defeat catalytic converters, EVAP, EGR, or O2 sensors.
+6. **No firmware blobs.** Never commit ROM binaries or firmware images. Work from your own pulls.
 
 ## Where to Discuss
 

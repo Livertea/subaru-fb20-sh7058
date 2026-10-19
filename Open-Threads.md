@@ -17,7 +17,37 @@ Everything in this wiki is **unvalidated against real hardware**. Plan: buy the 
 
 **Update 2026-10-18:** the checksum thread is resolved (routine at ROM 0x152 is a reflash-protocol tool, not a boot gate — the ECU does not verify a ROM checksum at boot), so checksums are **no longer a flashing blocker**. Remaining risks are interrupted writes and wrong-CAL-ID flashes.
 
-### 2. Misc-Table Hypotheses Need Testing
+**Update 2026-10-18 (emulation):** a purpose-built SH-2A emulator now validates table *computation* pre-flash (0.8 verified core, 34 tables). Emulation answers "what does the code compute"; the cable answers "what does the engine do." Both are needed — emulation can't prove physical meaning.
+
+### 2. Scaling Questions Emulation Can't Answer (Need Dyno/MAF Data)
+Two tables are structurally validated but their scaling is **unresolvable by emulation** — the dispatcher returns raw values and ignores record scale/offset fields, so both candidate scalings are computationally consistent:
+- **VE tables (84):** record scale 0.0078125 → 104–180% VE; v0.7 scale → 37–73%. Neither is physically plausible. Needs MAF-correlation or dyno data.
+- **D7FEC warmup trim:** record scale 0.3515625 vs alternative 0.0390625 — a 9× difference, unresolvable without logged data. Structure + Y-selector confirmed; scaling is a physical question.
+
+These stay out of 0.8 until hardware data arrives.
+
+### 3. Throttle Mechanism Unknown
+DBW Step 2 trace (2026-10-18) found **no code-referenced table lookup** for throttle mapping — every Target Throttle and Torque Limit table in the DBW region is a decoy (67% of DBW-region records unreferenced; requested-torque RAM has zero consumers). The real throttle mechanism is unknown (4 hypotheses, none confirmed). Throttle servo driver registers not identified. **Throttle remap has no tunable table in v0.7** — the tuning guide's throttle section needs this caveat.
+
+### 4. Knock Final Summation Point
+The knock subsystem is traced (feedback/fine/rough modes, IAM, retard limits) but the **final summation point** — where base timing + knock correction combine into the actual ignition command — was not found. IAM update mechanism unknown (3 hypotheses). Knock threshold is a hardware comparator, not a ROM table.
+
+### 5. Driver Register IDs (Injector / Throttle / AVCS)
+- **Injectors:** ATU-II Ch 2 registers identified (GR2A-D @0xFFFFF604/606/608/60A, OCR2A-D @0xFFFFF614/616/618/61A, TCNT2B @0xFFFFF602; config table @ ROM 0x110F4) — the actual writer not found.
+- **Ignition:** ATU-II, registers unidentified (MEDIUM priority).
+- **AVCS:** P-only controller confirmed, duty RAM @0xFFFF5E18, exact PWM write not found.
+- **Memory-map correction:** peripherals live at 0xFFFFC000+, not 0xFFFF8000+ — knock (0xFFFF87xx) and SCI (0xFFFF80xx) attributions need re-examination.
+
+### 6. Idle Mode Writer
+Idle selector traced (@0x575BA, mode byte @0xFFFF8E7C, ECT switch at exactly 50°C) but the **mode writer was not found** (exhaustive search of 3,191 GBR-relative stores came up empty).
+
+### 7. @0xCD464 Dims
+13×17 u16 with 91% 0x7FF8 padding; ~20 real words; 1 call site @0x82842. Verdict: dims stale, real table ~5×4. Decision pending.
+
+### 8. CAN Validation (Phase 3)
+Scoped 2026-10-18: CAN as a third validation leg (emulation = what the code computes, OBD2 = what the engine does, CAN = what the ECU broadcasts). 12 experiments in 3 tiers; the money experiment is catching the **fan-state frame flipping at 90.0°C** during parked idle — third independent confirmation of fan thresholds. Hardware verdict: CANable (~$40 all-in), not CANsub.2 (~€400). CSS Electronics' MIT-licensed reverse-engineering skill works over python-can on the CANable. Timing: study the skill now, one instrumented drive after the Nov 6 cable (pairs with the planned highway run).
+
+### 9. Misc-Table Hypotheses Need Testing
 The re-triage added 101 tables, and a speculation pass over the unknowns produced testable subsystem hypotheses (see `MISC_MUSINGS_2026-10-18.md` in the analysis folder). Best bets, all **unverified**:
 - **Feedback-controller error maps** (MEDIUM) — 9 tables (0xC2CF4 family): symmetric saturating error→correction curves from one code region. Possibly the idle or closed-loop-fuel feedback controller's lookup set — a subsystem with zero current coverage.
 - **Delta-temperature timing corrections ×4** (MEDIUM-HIGH) — DF934/DFA34/DFB34/DFC34: ±11.5° through 0 at Δ=0. Likely ignition-timing comp vs temperature delta.
@@ -29,35 +59,32 @@ The re-triage added 101 tables, and a speculation pass over the unknowns produce
 
 Confirmation paths: logger data (Nov 6+), disassembly of the calling functions, or cross-check against the FB25 donor defs.
 
-### 3. Scalar Blocks: Exact Functions Still Open
+### 10. Scalar Blocks: Exact Functions Still Open
 Subsystem attributions landed (see closed archive), but exact functions are unresolved:
 - **P4+P5** (MEDIUM) — ECT-compensation executive in the idle/cold-start domain; exact function (idle vs cold-start enrichment) unknown.
 - **P1 + ClusterB** (LOW) — constant pools for a cyclic task family (scheduler entries 1, 2, 20, 21); subsystem unidentified.
 - Needs Ghidra work on the owning code regions.
 
-### 4. Honda Scalar Directory Decode
+### 11. Honda Scalar Directory Decode
 The Honda 92-table definition is done, but the scalar directory resisted decoding: `NN 66 66 00` markers at 0xC800–0xC8B4 are irregularly spaced (variable-length or interleaved entries); all fixed-stride parses fail. VTEC scalars are inline @ ROM 0xB26E (5800/5600×2). Rev limiter not found. Needs a dedicated attempt or logger data.
 
-### 5. Untraced Disassembly Targets
+### 12. Untraced Disassembly Targets
 Highest-value code not yet traced:
 - **Final fuel summation order** — how the 9 fuel stages combine into the final pulse width.
 - **Knock/timing summation code** — how base timing + knock correction combine.
 - **Tip-in trigger routine** in the SH7058 ROM — answers the open RomRaider-thread question (pedal % vs plate % for the throttle delta).
 
-### 6. Five Runtime-Computed R4 Dispatcher Sites
+### 13. Five Runtime-Computed R4 Dispatcher Sites
 169/182 secondary-dispatcher sites resolved. The remaining 5 use runtime-computed R4 (register-indexed — incl. a 65-entry all-type-1 table @0x6D89C — struct/stack offsets, GBR-indirect). What tables they reach is unknown.
 
-### 7. RomRaider Forum Moderation Outcome
+### 14. RomRaider Forum Moderation Outcome
 The RomRaider forum post (Subaru ECU Analysis subforum, AI-POV with full transparency warnings) was submitted and is awaiting moderation. Outcome unknown — check back. A tip-in wiki draft for the forum's long-running tip-in thread is written and awaiting the author's edits.
 
-### 8. Repo Reopening
+### 15. Repo Reopening
 The GitHub repo is currently private while the author scrubs personal info and verifies contents. Reopening is **his call** — v0.7 (863 tables) and updated docs go public when he says so. License: CC BY-NC-SA 4.0 (no commercial use, ever).
 
-### 9. Threads Posts
+### 16. Threads Posts
 The announcement thread is 7 of 10 posts live (rate-limited until Oct 19); old-thread drafts 8–10 exist (post 10 must say **863 tables**). A new 6-post "rabbit hole went deeper" thread (v0.7 depth, break notice, wiki/collaboration invite) is drafted for manual posting.
-
-### 10. DTC CSV Regen
-`dtc_pcode_mapping.csv` has 236 rows — needs regenerating with the 7 duplicate-P-code second-descriptor entries (243 total).
 
 ## Further Out (Background Leads)
 - **2008 Corolla (NEC V850):** not SH7058, but the V850 is the direct predecessor of the RH850 — possible stepping stone for Gen-3 research.
@@ -71,6 +98,7 @@ The announcement thread is 7 of 10 posts live (rate-limited until Oct 19); old-t
 
 Everything below was resolved during the 2026-10-18 push. Kept for the record — the methods that worked are worth more than the answers.
 
+- **DTC CSV regen — DONE (2026-10-18).** Regenerated directly from the ROM (descriptor table @0xA1431 × switch bank @0xA1338): 243 rows, 0 mismatches against the prior 236; 7 new rows are the duplicate-P-code second descriptors.
 - **Table hunt — COMPLETE.** 863 tables in v0.7 (~97% of ~875–900 universe). Methods converged (directory decode, dispatcher tracing, disassembly verification): no hidden population.
 - **Re-triage — DONE.** Re-ran the missing-table triage against 169 resolved secondary-dispatcher sites: 101 new tables (87 uint16 + 14 float32), 20 rejected, 3 bogus entries rejected, 4 byte-level corrections to existing tables, 1 superseded table removed. Merged as v0.7.
 - **Second dispatcher deep trace — DONE.** 169/182 sites resolved (162 unique entries). Type byte = data type (type-0 = float32 passthrough, proven by `tst r6,r6; bt/s` skipping the fmac). The "0x3B/0x3C/0x3E" mystery was a 4-byte-misaligned read; true type bytes {0x00, 0x04, 0x08}. Types 3/4 have zero call sites.
@@ -100,4 +128,4 @@ Everything below was resolved during the 2026-10-18 push. Kept for the record �
 
 ---
 
-*Last updated: 2026-10-18. Table hunt closed at 863 tables; open work is the 10 threads above. If you pick up one of these threads, update this page.*
+*Last updated: 2026-10-18. Table hunt closed at 863 tables; open work is the 16 threads above. If you pick up one of these threads, update this page.*

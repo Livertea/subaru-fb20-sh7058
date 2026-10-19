@@ -153,6 +153,39 @@ These overlap with P1-P5 (unidentified). They're real calibration data but **not
 
 ---
 
+## Campaign Agents: Tuning-Path Traces (Oct 18)
+
+Seven agents traced the major tuning paths through disassembly. Key findings:
+
+### Fuel hub @0x43F64 — summation order resolved
+Explicit instruction-level trace: base OL fueling → correction × blend → fmac blend → multipliers → offset → clamp → truncate → rate-limit. Cruise/non-cruise selection via r5. Tip-in RAM feeds fuel directly. **Open thread #1 (fuel summation order) closed.**
+
+### DBW Step 2 — does not exist
+Requested torque RAM (0xFFFF8C80) has zero code consumers. All Target Throttle (A/B/C) and Torque Limit tables have zero code refs — 14/21 DBW records (67%) unreferenced. **Throttle remap via v0.7's tables would be placebo.** Real mechanism unknown (4 hypotheses).
+
+### Knock — KCA tables are fake
+All five "Knock Correction Advance Max" tables: zero refs, impossible values (30–80°). This ECU does not use KCA×IAM. Real system: 3-mode (feedback/fine/rough), IAM init 0.50, 25 parameter tables. Downstream: @0x81B50 comparator → @0x81F80 safety gate → final clamp [−6.67°, +21.11°]. Final summation point not found.
+
+### VE — live via pointer tables
+The "VE is dead" verdict was wrong. Pointer table @0x6D89C → records → 84 tables, all live. Selection from cam positions (42 = intake×exhaust combos). Scaling unresolved (v0.7 vs record disagree). Not in fuel hub path.
+
+### Timing blend @0x81F00
+`result = w·E + (1−w)·F`, RPM-indexed weight, mode hysteresis 250/249. v0.7 Base Timing F X-axis was wrong ([0.2..0.8] → [500..755]).
+
+### MAF path — fully traced
+ADC @0xFFFF4042 → ×(5/65536) → MAF Scaling @0xDCEA0 → temp comp → load @0xFFFF66E4. MAF Scaling is the only live airflow table. Baro comps dead.
+
+### Injector latency @0x35A96 — v0.7 validated
+Record 0xB5048 by battery voltage, ×0.25 → µs. 5×2 record with degenerate Y. Values textbook (3.41ms @ 6.5V → 0.51ms @ 16.5V).
+
+### Idle / Fan / Limiter / AVCS
+- Idle selector @0x575BA: 8-way mode switch, Mode 2→K (cold), Mode 3→M (warm), 50°C switch.
+- Fan @0x34760: 6 hysteresis latches, low 90/83.3°C, high 100/89.3°C.
+- Rev limiter @0x408C4: fuel cut, 6700/6600, 10 flags ORed → master cut.
+- AVCS: P-only duty controller, 360/65535 scaling triple-confirmed.
+
+---
+
 ## Summary of Action Items
 
 ### Corrections Needed

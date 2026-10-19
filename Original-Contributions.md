@@ -48,6 +48,42 @@ These are tools, techniques, and datasets created during this project with no pr
 
 ---
 
+## Campaign Discoveries (Oct 18 Tuning-Path Traces)
+
+These are findings from the systematic disassembly campaigns — each was discovered through code analysis of this ROM, not from reference definitions.
+
+### 1. VE Liveness Proof (Refuting the "Dead" Verdict)
+
+**What:** The 84 VE tables were declared dead (zero literal code refs). A second trace found the pointer-table chain: code @0x28D5A → pointer table @0x6D89C (84 entries) → dispatcher records → VE tables. All 84 are live.
+
+**Why it matters:** This was the finding that proved literal xref scans insufficient and created the four-layer verification method (see Methods §6). The 11% unreferenced-records figure is now known to be an upper bound.
+
+### 2. D335C Scaling Fix (The Offset Field)
+
+**What:** Unknown 16×3 table @0xD335C was decoded as 0.50–0.62 (wrong). The dispatcher record @0xB5254 carries an offset of −0.5 at record+24 that was missed. Correct scaling: `(x·1.5259e-05)−0.5` → 0.00–0.12 (cold-biased correction, 12% @ −40°C → 0% @ 10°C+).
+
+**Why it matters:** Created the rule that every dispatcher record decode must check the offset field at record+24, not just the scale. The table is looked up by fn @0x38EA8, gated on RAM > 200.0.
+
+### 3. AVCS Scaling Resolution (Triple-Sourced)
+
+**What:** v0.7's 360/65535 scaling (max 12.6°) was questioned against the FSM's 55–68° figure. Resolved: 360/65535 is correct, confirmed by three independent sources across three Denso MCU generations (our ROM physics + fa20guy's FA20 SH72531 + 2005–06 Legacy SH7055 defs). The 12.6° max is a calibration choice; FSM's 55–68° is the phaser's mechanical travel limit. The control loop operates in raw uint16 units; degree scaling is display-only.
+
+**Why it matters:** Settles the highest-uncertainty scaling in the definition. Also proved the AVCS controller is P-only (no PID): `duty = clamp((error/1.6)+0.5, 0, 255)`.
+
+### 4. Injector Latency Gen1→Gen2 Continuity
+
+**What:** The `x·0.00025` ms injector latency scaling is character-identical between SH7055 (2004) and SH7058 (2012). Code-confirmed: fn @0x35A96 looks up record 0xB5048 by battery voltage, scales raw u16 ×0.25 → µs. v0.7's 2D representation validated (record is nominally 5×2 but Y-rows are byte-identical).
+
+**Why it matters:** One of 18 scalings frozen across 8 years of Denso ECUs. The continuity is evidence that Denso's physical-unit math is stable — a foundation for the scaling-fingerprint method.
+
+### 5. Per-Gear Torque Limits (Mislabeled "Timing Comp")
+
+**What:** The 14-table "Timing Comp Per Gear" family (@0xDB280–0xDC104) was shelved as mislabeled. Re-examination: function ~@0x557C0 selects 6 of 14 records via conditional branches; values reach 195–210 (absurd as timing degrees, consistent with FB20 peak torque ~200 Nm). These are real, code-used **per-gear torque limit tables** — 6 for 5MT.
+
+**Why it matters:** Recovered 6 tunable tables from the shelved pile. Demonstrates that "wrong label" ≠ "wrong data" — the tables were real, only the name was wrong.
+
+---
+
 ## Methods I Invented (or Systematized)
 
 These are methodological contributions — ways of working that emerged during the project. Some were human-directed; I systematized and applied them.
@@ -97,7 +133,15 @@ These are methodological contributions — ways of working that emerged during t
 
 **Why it's mine:** I pushed for documenting these explicitly instead of just moving on. The Mazda "no dispatcher" finding is the clearest example — it's not a failure, it's data about Denso's per-program architecture.
 
-### 5. Cross-Platform Methodology Transfer Test
+### 5. Four-Layer Code-Reference Verification
+
+**What:** A table is only "dead" after checking all four layers: (1) literal refs to the data address, (2) refs to the dispatcher record, (3) pointer tables containing the record address, (4) code referencing those pointer tables. Literal xref scans alone are insufficient.
+
+**Why it's mine:** The VE tables showed zero literal refs and were declared dead — then the pointer-table chain (@0x6D89C → records → tables) proved them live. The idle selector (pointer arrays @0x57768) was the second case. I formalized the four-layer rule after these two failures of naive xref.
+
+**Why it matters:** The "11% unreferenced records" figure is an UPPER BOUND until pointer-table indirection is accounted for. Every "dead table" verdict in the project was re-audited against this rule.
+
+### 6. Cross-Platform Methodology Transfer Test
 
 **What:** When you develop a method on one platform, immediately test it on a different platform to see what transfers.
 
@@ -193,4 +237,4 @@ If any of the above has prior art we missed, or if we've misattributed something
 
 ---
 
-*Last updated: 2026-10-18. 863 tables. ~97% of ~875–900 estimated universe.*
+*Last updated: 2026-10-18. 863 tables. ~97% of ~875–900 estimated universe. Oct 18 campaigns added: VE liveness, four-layer method, D335C fix, AVCS scaling, injector latency continuity, per-gear torque limits.*

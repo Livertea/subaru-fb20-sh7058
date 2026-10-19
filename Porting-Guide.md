@@ -34,9 +34,27 @@ If you take one sentence from this page: find the lookup function first, cross-r
 - **Merp/SubaruDefs, Alpha branch (free, downloadable):** FB20 ECUFlash defs `EP5F300H`, `EP5F301I`, `EP5I200F`, `EP5L001G`, plus `EP5G601B` (2012 EDM Impreza 2.0i CVT SH7058 — header-confirmed). Also `EP5F300S`/`T`/`r`, `EP5L000P`, `EP5N000Z` (XV 2.5i) were listed but not opened. Caveat: Alpha-branch community defs; the repo README itself warns of errors.
 - **Local reference copies** (in this project's `reference_defs/`): `RR_EP5G211a.xml`, `RR_EP5G300b.xml`, `RR_EP5G401z.xml` (Forester/XV FB-family RomRaider defs). Note: `RR_EP5G300b.xml` (EDM Forester 2.0i FB20 CVT) could not be independently corroborated in public listings — treat its provenance with caution.
 
-**Known ROM bins:** Effectively none free. The only public FB20 SH7058 ROM dump remains the 2022 RomRaider forum thread t=19254 dump (the one this project used). A three-agent hunt across GitHub, forums, and commercial sources found **zero free FB20 ROM bins on the open web**. Paid path: **avtochip.ru** lists a 2012 Subaru XV 2.0 Denso SH7058 entry (`PF_11CYH4N` / `LEP5F300`, 1024kb) — note `PF_11CYH4N` is the *same internal ROM ID* as EP5GD00A, making LEP5F300 the closest documented sibling ROM. It's a paid chiptuning file service (price on request). **XRT (Xtreme Racing Tuning)** e-tunes FB20/FB25 NA (e.g. 2013 Crosstrek FB20 5MT ROM `EP5IA00B`) by email — proof that private defs exist, nothing downloadable.
+**Known ROM bins:** The "zero free FB20 ROMs" claim was overturned Oct 2026 — the public GitHub repo **bludgod/RomRaider** ("Romraider Stock Roms", 501 files) holds **14 free FB20/FB25 SH7058 ROMs** (1MB each, `.hex` extension — that's why the first hunt missed them), including `EP5F300H` (2013 EDM Impreza 2.0 FB **MT**) and `EP5I200F` (2013 USDM Impreza 2.0i **MT**). The t=19276 dump (an anonymous 2022 upload — not this project's own ROM pull; that pull is pending the cable) remains the only public source for EP5GD00A itself. Paid path: **avtochip.ru** lists a 2012 Subaru XV 2.0 Denso SH7058 entry (`PF_11CYH4N` / `LEP5F300`, 1024kb) — note `PF_11CYH4N` is the *same internal ROM ID* as EP5GD00A, making LEP5F300 the closest documented sibling ROM. It's a paid chiptuning file service (price on request). **XRT (Xtreme Racing Tuning)** e-tunes FB20/FB25 NA (e.g. 2013 Crosstrek FB20 5MT ROM `EP5IA00B`) by email — proof that private defs exist, nothing downloadable.
 
 **Difficulty:** 1/5 *if you have the ROM*. Directory-decode first, diff the directory against EP5GD00A's, then dispatcher-trace only the entries that don't match. A weekend project with the method in hand.
+
+### Case study: EP5I200F port (Oct 2026) — first measured port
+
+The 2013 USDM Impreza 2.0i MT ROM (`EP5I200F`, from the bludgod repo) was ported using the v0.7 definition as a Rosetta Stone, scoped to the 76 normally-tuned tables. Result: **69/76 mapped (91%) in ~48 minutes** — 58 moved addresses, 11 byte-identical in place.
+
+Findings worth propagating to every future FB20 port:
+
+- **The 2012→2013 calibration is essentially byte-identical** (correlation 1.0000 on nearly everything mapped). Porting within FB20 is an *address-mapping* problem, not a recalibration problem. The entire DBW/torque/limiter block (0xF8E44–0xFB79C) didn't move a single byte.
+- **Calibration moves in blocks.** The 24-scalar knock cluster moved intact (+0x66C); the limits cluster preserved relative offsets. Rule of thumb: when one table in a cluster moves, check the same offset for its neighbors.
+- **The directory lies here too.** Format verified identical, but stale entries exist (Throttle B's entry is wrong) — same lesson as EP5GD00A. Nothing is taken on faith from the directory alone; every claim was backed by data-correlation.
+- **Duplicates are real — don't "dedupe" them.** Base Timing Idle has 5 byte-identical duplicates; OL Cruise has a duplicate; CL Fueling A/B/D share data. They're separate table slots the ECU reads independently.
+- **The port caught a real v0.7 bug:** Base Timing F @0xCD010 is 7×16, not 13×17 (verified against EP5GD00A ROM bytes; fixed in the XML).
+- **One genuine recalibration:** Ignition Dwell (correlation 0.94) — flag before tuning; likely a coil/charging revision.
+- **Two new tables in 2013** with no EP5GD00A counterpart: 16×3 injector-correction tables at 0xD26F8/0xD2764. Minor.
+- **7 tables unresolved** (Base Timing A/C/D, Knock A/B/C/D) — their axes were found but data isn't in the directory and shape-scans failed. That's the honest 10% that needs dispatcher tracing.
+- **Speed estimate for full ports:** ~90% of tables map mechanically in the first hour via directory + data-correlation; full 863-table def estimated 70–80% mechanical. The porting loop corrects the reference too — this is how v0.7 got its Base Timing F fix.
+
+Full report and address map: `EP5I200F_PORT_REPORT_2026-10-18.md`, `address_map_ep5gd00a_to_ep5i200f.csv`.
 
 ---
 
@@ -69,11 +87,23 @@ If you take one sentence from this page: find the lookup function first, cross-r
 **What must be redone:** Everything structural. Different engine means different table set (port+direct injection on later FA20s, different AVCS, different torque model). Directory and dispatcher addresses will differ; verify the dispatcher mechanism still holds before assuming it.
 
 **Known public defs (local reference copies in `reference_defs/`):**
-- `ZA1JS10C_v7.xml`, `ZA1JS20G_v1.xml`, `ZA1JU01A_v22.xml` — from callistoprime/brz-defs, 2,400–2,700 tables each. The BRZ community is the best-documented Denso reverse-engineering scene; their defs are the richest structural reference available.
+- `ZA1JS10C_v7.xml`, `ZA1JS20G_v1.xml`, `ZA1JU01A_v22.xml` — from callistoprime/brz-defs, 2,400–2,700 tables each. The BRZ community is the best-documented Denso reverse-engineering scene; their defs are the richest structural reference available. **callisto — known in this project's circles as "fa20guy" — is the gold-standard reference for FA20 work.** His defs were used as ground truth to score our blind-mapping experiment below, and as the cross-generation comparison reference for the SH7055→SH7058 scaling fingerprint library. His DTC switches carry honest "DO NOT USE" warnings — the prior art's guesswork that proved our 20-byte DTC descriptor decode was genuinely novel.
 
 **Known ROM bins:** The BRZ scene shares ROMs more freely than the FB scene (check the RomRaider forums and brz-defs community spaces).
 
-**Difficulty:** 3/5. You'd be re-running the full methodology, but on a platform where the community already did half the scouting for you.
+### Case study: FA20 blind-mapping experiment (Oct 2026) — the method, measured
+
+Before touching the FA20, we ran a **blind experiment**: map the stock BRZ/86 ROM (`ZA1JA01G`, 1280KB, SH72531) from the binary alone, under strict blind protocol — no peeking at the public def — scoped to normally-tuned tables. The public def was then used to *score* the blind map after it was frozen. This is the closest thing this project has to a controlled measurement of whether the methodology actually works on an unfamiliar ROM.
+
+**Results:**
+- **Maps (timing, fueling, AVCS, throttle — the highest-value tuning tables): 100% precision.** On everything the blind method found, it was essentially never wrong about mechanics: 38/38 axis addresses exact, 7/7 dims exact. The blind run also caught **16 errors in the public def** (5 curves mislabeled as maps, 11 scalars mislabeled as curves, 6 AVCS tables missing dims) and 280 real tables the community def doesn't cover.
+- **Gap closure:** the 28 initial misses were diagnosed as valid records with exactly one reference each (pointer-array entries or `movi20`-loaded call sites) — invisible to call-site-driven harvesting. A direct record-region sweep (`record_sweep.py`) recovered **89/89 dispatcher-findable in-scope tables** (100%), zero regressions. With the fix, the method's ceiling on dispatcher tables is ~35/35 addresses, dims, and axes correct.
+- **Scalars:** a separate literal-pool cross-reference method (`scalar_hunt.py`) achieved **85.4% recall** (35/41), **95.1% combined** with the sweep. The remaining misses are code-embedded constants — honestly out of reach for address-based hunting, and flagged as such.
+- **Bottom line, measured:** bin → draft definition runs at **~70% fully deterministic / 25% agent judgment / 5% human**, with **100% correct addresses/dims/axes on tables found, 85–95% scalar recall, ~75% naming**. The miss rate is a *recall* problem with a known, fixable cause — not a precision problem.
+
+Full study: `AUTO_DEF_FEASIBILITY_2026-10-18.md`, scripts `record_sweep.py` / `scalar_hunt.py` in the project repo. The methodology page's workflow is what was measured here.
+
+**Difficulty:** 3/5. You'd be re-running the full methodology, but on a platform where the community already did half the scouting for you — and the blind experiment above says the methodology earns its keep.
 
 ---
 

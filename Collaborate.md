@@ -47,6 +47,8 @@ A few conventions that keep the project sane — please follow them:
 
 **CC BY-NC-SA 4.0 — no commercial use, ever.** Share it, remix it, build on it, but don't sell it or anything derived from it, and share alike. This is a statement of intent as much as a legal backstop: the work exists for the public good, not for someone's product.
 
+**No firmware blobs, ever.** Definitions, documentation, methods, and analysis are public. ROM binaries are not distributed through this project — everyone works from their own pull or from publicly available sources. This is both a legal line (DMCA §1201(f) interoperability) and a practical one.
+
 ## What "done" looks like
 
 1. Hardware-validated definition (logger-confirmed tables, corrected labels)

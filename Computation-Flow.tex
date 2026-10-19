@@ -66,18 +66,18 @@ Chain stages cite tables by ROM address. See the wiki page
 \chapter{DBW Chain}
 
 Torque-based throttle control: pedal $\rightarrow$ requested torque
-$\rightarrow$ throttle plate position. Two steps; no ``Requested Torque Base''
-table exists on this ECU (confirmed negative finding).
+$\rightarrow$ throttle plate position. \textbf{Update 2026-10-18:}
+Step~1 is code-confirmed (@0x55E6E); Step~2 has \textbf{no code-referenced
+table lookup} --- the Target Throttle and Torque Limit tables are decoys
+(zero code refs).
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.6cm]
-  \node (s1) [stage] {Requested Torque A/B \\ \texttt{0xFA08C} / \texttt{0xFA774} \\ pedal\% $\times$ RPM $\rightarrow$ raw torque};
-  \node (s2) [stage, below of=s1] {Torque Limit A/B \\ \texttt{0xFB698} / \texttt{0xFB79C} \\ clamp (placement: open thread)};
-  \node (s3) [stage, below of=s2] {Target Throttle Plate A/B/C \\ \texttt{0xF9240} / \texttt{0xFAEF4} / \texttt{0xF9800} \\ torque $\times$ RPM $\rightarrow$ plate \%};
-  \node (s4) [stage, below of=s3] {Throttle servo \\ code untraced (open thread)};
+  \node (s1) [stage] {Requested Torque A/B \\ \texttt{0xFA08C} / \texttt{0xFA774} \\ pedal\% $\times$ RPM $\rightarrow$ raw torque \\ \texttt{@0x55E6E}, output \texttt{0xFFFF8C80}};
+  \node (s2) [stage, below of=s1] {Torque $\rightarrow$ throttle \\ \textbf{NO TABLE LOOKUP IN CODE} \\ TT-A/B/C, TqLim: zero refs};
+  \node (s4) [stage, below of=s2] {Throttle servo \\ code untraced (open thread)};
   \draw [arrow] (s1) -- (s2);
-  \draw [arrow] (s2) -- (s3);
-  \draw [arrow] (s3) -- (s4);
+  \draw [arrow] (s2) -- (s4);
 \end{tikzpicture}
 \end{center}
 
@@ -91,18 +91,15 @@ ROM-verified row 0: raw $[0, 9, 1636, 2991, \ldots] \rightarrow
 Identical duplicates at \texttt{0xFA40C}/\texttt{0xFAAF4} are the leading
 cruise/non-cruise hypothesis (open thread: selection logic).
 
-\section{Stage 2: Torque limit}
+\section{Stage 2/3: Torque limit / Target throttle (DECOYS)}
 
-\texttt{0xFB698} / \texttt{0xFB79C}, $10\times5$ float32BE.
-Reference-derived. C/D variants searched for and not confirmed.
+\texttt{0xFB698} / \texttt{0xFB79C} (torque limit), \texttt{0xF9240} /
+\texttt{0xFAEF4} / \texttt{0xF9800} (target throttle): \textbf{zero code
+references}. Structurally valid data the ECU does not use. Do not tune.
 
-\section{Stage 3: Target Throttle Plate Position}
-
-\texttt{0xF9240} (A, $50\times12$), \texttt{0xFAEF4} (B, $50\times12$),
-\texttt{0xF9800} (C, $50\times19$). X = requested torque (5--187),
-Y = RPM. Data scaling $x \cdot 0.002270655357 \rightarrow$ plate \%.
-Each row carries a 2-u16 footer $[\texttt{0xB021}, X]$ with
-\texttt{0xB021} $= 102.38\%$ max clamp (shape-inference).
+Per-gear torque limits (NEW): 6 tables from the ``Timing Comp Per Gear''
+family, selected by \texttt{\textasciitilde0x557C0}; values 195--210
+consistent with FB20 peak torque.
 
 \section{Limiters}
 
@@ -113,27 +110,40 @@ increasing values $=$ progressive closure, not hysteresis.
 % ---------------------------------------------------------------------------
 \chapter{Fuel Chain}
 
-\section{Stage order (hypothesis)}
+\section{Stage order (updated 2026-10-18)}
 
 \begin{enumerate}
-  \item Air measurement: MAF scaling \texttt{0xDCEA0}, MAP scaling \texttt{0xDCCD8}
-  \item Cylinder fill: VE families \texttt{0xC4E70} ($6\times11$, 42 tables)
-        + \texttt{0xC6418} ($6\times18$, 42 tables), $x \cdot 0.00305175781$
+  \item Air measurement: MAF scaling \texttt{0xDCEA0} --- full path traced:
+        ADC \texttt{0xFFFF4042} $\rightarrow$ volts $\rightarrow$ dispatcher
+        $\rightarrow$ g/s \texttt{0xFFFF40B4} $\rightarrow$ temp comp
+        $\rightarrow$ load \texttt{0xFFFF66E4}
+  \item Cylinder fill: VE families \texttt{0xC4E70} ($12\times11$, 42 tables)
+        + \texttt{0xC6418} ($12\times18$, 42 tables) --- \textbf{LIVE via
+        pointer table \texttt{0x6D89C}} (not dead); scaling unresolved
   \item Base fuel: Primary Open Loop Fueling Non-Cruise \texttt{0xD46E8}
         ($10\times16$) / Cruise \texttt{0xD487C} ($10\times11$),
         $\mathrm{AFR} = 14.7 / (1 + x \cdot 0.0078125)$
   \item Closed-loop targets: CL Fueling Target Compensation A--D (load)
-        \texttt{0xD34A6}/\texttt{0xD36F6}/\texttt{0xD3946}/\texttt{0xD3B96}
+        \texttt{0xD34A6}/\texttt{0xD36F6}/\texttt{0xD3948}/\texttt{0xD3B96}
         ($11\times21$); ECT comp \texttt{0xC3FB0}
-  \item Transient: tip-in tables + X-tau wall-wetting (see \S\ref{sec:xtau})
+  \item Transient: tip-in comp tables (main A/B have zero refs --- demoted) +
+        X-tau wall-wetting (see \S\ref{sec:xtau})
   \item Warmup/cranking: warmup enrichment \texttt{0xCF399},
         cranking IPW \texttt{0xCF586}/\texttt{0xCF5E6}/\texttt{0xCF646}
   \item CL$\leftrightarrow$OL transition: \texttt{0xD5180}/\texttt{0xD51D0}
   \item Decel: Idle Airflow Decel Adders \texttt{0xD9720}/\texttt{0xD9758}
         (rev hang mechanism)
-  \item Final pulse width: injector latency near \texttt{0xD26A0};
-        injector flow scalar \textbf{not found} (open thread)
+  \item Final: fuel hub \texttt{0x43F64} (summation order traced, see below);
+        injector latency \texttt{0x35A96} ($\times 0.25$); injector flow
+        scalar \textbf{not found} (open thread)
 \end{enumerate}
+
+\section{Fuel hub summation order (disassembled)}
+
+\texttt{0x43F64}: base OL $\rightarrow$ correction $\times$ blend
+$\rightarrow$ fmac blend $\rightarrow$ multipliers $\rightarrow$ offset
+$\rightarrow$ clamp $[0, \texttt{@0xD3FC0}]$ $\rightarrow$ truncate
+$\rightarrow$ rate-limit. Output to RAM \texttt{0xFFFF83A6}.
 
 \section{Transient fueling and the X-tau model}
 \label{sec:xtau}
@@ -173,19 +183,26 @@ found (open thread).
 \section{Base timing}
 
 \texttt{0xCC7A0} / \texttt{0xCCA88} ($13\times13$, $x \cdot 0.1$~$^\circ$BTDC):
-ROM-verified raw $37$--$386 \rightarrow 3.7$--$38.6^\circ$
-(idle $7.9^\circ$, cruise $17.3^\circ$, WOT $16.3^\circ$).
+ROM-verified raw $37$--$386 \rightarrow 3.7$--$38.6^\circ$.
+\textbf{Base Timing A is phantom} (byte-identical to KCA E).
 \texttt{0xCD670}/\texttt{0xCD778} ($7\times13$, X axis $[500..750]$
-unidentified quantity --- open thread), \texttt{0xCCED4},
-\texttt{0xCD010}, idle \texttt{0xD4640}.
+unidentified --- open thread).
+
+\textbf{Timing blend} (disassembled, entry \texttt{0x81E28}):
+$\mathrm{result} = w \cdot E + (1-w) \cdot F$,
+$w = \mathrm{clamp}((\mathrm{input}-T_1)/(T_2-T_1), 0, 1)$,
+mode hysteresis on RAM vs $250.0/249.0$.
 
 \section{Knock control}
 
-Knock Correction Advance Max A--E:
-\texttt{0xCC450}/\texttt{0xCC2F6}/\texttt{0xCC638}/\texttt{0xCC6D8}/
-\texttt{0xCC738}, scaling $x \cdot 0.01$.
-ROM-verified A: raw $47$--$869 \rightarrow 0.47$--$8.69^\circ$;
-ceiling largest at light-load/high-RPM, collapsing near zero at WOT.
+\textbf{Knock Correction Advance Max A--E: FAKE.} Zero code refs, impossible
+values ($30$--$80^\circ$). This ECU does not use KCA$\times$IAM.
+
+Real system (disassembled, 31 functions \texttt{0x04B000}--\texttt{0x04C700}):
+three-mode (feedback / fine / rough-IAM), IAM initial $0.50$, 25 parameter
+tables. Downstream: \texttt{0x81B50} comparator $\rightarrow$ \texttt{0x81F80}
+safety gate $\rightarrow$ final clamp $[-6.67^\circ, +21.11^\circ]$.
+Final summation point not found.
 
 Parameter cluster \texttt{0xD4A40}--\texttt{0xD4B50} (ROM-verified):
 RPM hysteresis ranges \texttt{0xD4A5C} $[1100, 1200, 6900, 7000]$,
@@ -193,26 +210,14 @@ load pairs \texttt{0xD4AA4} $[0.48, 0.50]$, feedback retard limit
 $-7.0^\circ$ (\texttt{0xD4A6C}), IAM initial $0.50$ (\texttt{0xD4AB8}),
 step $0.03125$ (\texttt{0xD4AC0}).
 
-Knock code: 31 functions \texttt{0x04B000}--\texttt{0x04C700}
-(disassembled). Learned table in RAM \texttt{0xFFFF8800}/\texttt{0xFFFF8818},
-initialized from flash \texttt{0xD4AC4}--\texttt{0xD4AD0} via
-\texttt{0x4BB48}. Byte-wide \texttt{mov.b} refs to \texttt{0xFFFF87xx}
-are on-chip peripheral registers --- dedicated knock DSP unit hypothesis
-(open thread).
-
-Working hypothesis for the combination (Subaru-standard, reference-derived,
-\emph{not} traced in this ROM):
-\begin{equation}
-  \theta_{\mathrm{final}} = (\theta_{\mathrm{KCmax}} \cdot \mathrm{IAM})
-    + \theta_{\mathrm{feedback}} + \theta_{\mathrm{fine}}
-\end{equation}
-
 \section{Dwell and AVCS}
 
 Exactly one ignition dwell table \texttt{0xDD4C4} ($16\times5$,
 RPM $\times$ battery volts) --- proven by all nine reference definitions
 carrying exactly one. AVCS: four main cam-target maps
-\texttt{0xC1650}--\texttt{0xC1D28}.
+\texttt{0xC1650}--\texttt{0xC1D28} (disassembled: two-stage mux
+\texttt{0x16002}, P-only duty controller, 360/65535 scaling
+triple-confirmed).
 
 % ---------------------------------------------------------------------------
 \chapter{Diagnostics: SSM}
@@ -227,18 +232,19 @@ Parameter inventory is an open thread.
 \chapter{Open Threads}
 
 \begin{enumerate}
-  \item Final fuel summation order (base $\times$ warmup $\times$ tip-in
-        $\times$ X-tau $\times$ CL trim --- additive? multiplicative? order?)
+  \item \textbf{Resolved:} final fuel summation order --- fuel hub
+        \texttt{0x43F64} traced 2026-10-18.
   \item Relation of pre-computed $8\times8$ transient tables to the
         real-time X-tau filter code (\texttt{0x36616})
   \item Injector flow scalar --- location or computation method
   \item DFCO tables (resume threshold, cut counters, enrichment singles)
   \item Actual knock/timing summation code in ROM
-  \item DBW servo control loop; A/B/C variant selection
-  \item VE 42-variant selection logic
+  \item Real torque$\rightarrow$throttle mechanism (target-throttle tables
+        are decoys); DBW servo control loop
+  \item VE STD$\leftrightarrow$HI switchover; 5+5 lookup purpose
   \item Base-timing C/D X-axis quantity $[500..750]$
-  \item Knock DSP unit hypothesis (\texttt{0xFFFF87xx} peripherals)
-  \item Cruise/non-cruise variant assignment across chains
+  \item Per-gear torque limit branch conditions
+  \item Idle mode-byte writer; AVCS exhaust error loop
 \end{enumerate}
 
 % ---------------------------------------------------------------------------
@@ -250,6 +256,10 @@ Date & Version & Change \\
 \midrule
 2026-10-18 & 0.1 & Skeleton: DBW, fuel, timing chains; TikZ flow for DBW;
                     X-tau filter equation; open-threads appendix. \\
+2026-10-18 & 0.2 & Campaign integration: fuel hub summation, MAF path, VE
+                    liveness, DBW Step-2 decoys, KCA fake, timing blend,
+                    knock downstream, per-gear torque limits, AVCS P-control;
+                    open threads updated. \\
 \bottomrule
 \end{tabular}
 
