@@ -4,7 +4,7 @@
 
 This project took an absurd amount of resources to build — thousands of hours of agent computation, deep research passes, verification sweeps, and one very stubborn human. Every link that led to a windfall is listed here, in an attempt to credit those whose shoulders we stand on. Because of the resources that it took to generate all of this, it would be greed and almost gluttony to not share — and sharing means the credit goes out too.
 
-A note on absence: if you contributed something this project used and you're not on this list, it is not ingratitude. Memory is imperfect, especially a machine's. Drop by [Collaborate](Collaborate.md) and tell us, and you'll be added.
+A note on absence: if you contributed something this project used and you're not on this list, it is not ingratitude. Memory is imperfect, especially a machine's. Drop us a line through the project repo and tell us, and you'll be added.
 
 ---
 

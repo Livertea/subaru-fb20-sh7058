@@ -1,184 +1,39 @@
-# Porting Guide: How This Work Transfers to Other Engines and Cars
+# Porting Guide
 
-> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
->
-> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
->
-> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+*I have a different car — how much of the EP5GD00A work helps me?*
 
----
-
-This page answers one question: *I have a different car — how much of the EP5GD00A work helps me?*
-
-Entries are ordered from **closest relative** (nearly a copy-paste job) to **furthest** (only the method survives). For each: what transfers verbatim, what must be redone from scratch, where to find public definitions and ROMs, and an honest difficulty estimate.
-
-## The Iron Law (read this once, it applies to every entry below)
+## The Iron Law
 
 > **Port the METHOD. Never the ADDRESSES.**
 
-This was learned the hard way: the CVT reference definition's addresses were verified garbage on the MT ROM, and blind porting was abandoned on day one. Across Subaru, Honda, and Mazda, **zero** same-named tables shared addresses (the single exception in all our cross-checks: speed limiters at `0xF8E44` between EP5GD00A and the Forester FB25). What *does* transfer: table **names**, **scalings**, **axis identities**, **DTC descriptor layouts**, and above all the **workflow** — dispatcher-tracing, directory-decode, reject audits ([Methodology](Methodology.md)).
+The CVT reference definition's addresses were verified garbage on the MT ROM; blind porting died on day one. Across every cross-check (Subaru, Honda, Mazda): **zero** same-named tables shared addresses. What transfers: table **names**, **scalings**, **axis identities**, **DTC layouts**, and the **workflow** — dispatcher-tracing, directory-decode, reject audits ([Methodology](Methodology.md)).
 
-If you take one sentence from this page: find the lookup function first, cross-reference everything, validate against raw bytes, and never trust an address you didn't earn.
+## Case study: EP5I200F port (10-18) — first measured port
 
----
+The 2013 USDM Impreza 2.0i MT ROM (EP5I200F, from the bludgod/RomRaider repo) was ported using v0.7 as a Rosetta Stone, scoped to 76 normally-tuned tables: **69/76 mapped (91%) in ~48 minutes** — 58 moved addresses, 11 byte-identical in place.
 
-## 1. Other FB20 SH7058 — 2012–2016 Impreza / Crosstrek XV (EASIEST)
+Findings for every future FB20 port:
 
-**Relation:** Same engine family, same chip, same Denso firmware generation. This is the closest possible relative — some of these ROMs may differ from EP5GD00A by only calibration values.
+- **2012→2013 calibration is essentially byte-identical** (correlation 1.0000). Porting within FB20 is address-mapping, not recalibration. The DBW/torque/limiter block (0xF8E44–0xFB79C) didn't move a byte.
+- **Calibration moves in blocks.** The 24-scalar knock cluster moved intact (+0x66C). When one table in a cluster moves, check the same offset for neighbors.
+- **The directory lies here too.** Stale entries exist — nothing taken on faith; every claim backed by data-correlation.
+- **Duplicates are real — don't "dedupe."** Base Timing Idle has 5 byte-identical duplicates; they're separate slots the ECU reads independently.
+- **The port caught a real v0.7 bug:** Base Timing F is 7×16, not 13×17 (fixed).
+- **One genuine recalibration:** Ignition Dwell (correlation 0.94) — likely a coil revision; flag before tuning.
+- **6 tables unresolved** (Base Timing C/D, Knock A/B/C/D) — need dispatcher tracing. **Base Timing A FOUND 10-19 (BASETIMING):** @0xCC436 (record @0xB3748), 13×17, **live-looked-up** via the 16-entry record list @0x9E8A8 consumed by @0x8242C via base+offset indexing — result → [0xFFFFA1F4], emulator-validated at cruise. The "zero code references" verdict is refuted (a layer the four-layer rule didn't cover). SIB1 @0xCC3C6 promoted from "lookup unconfirmed" to live-looked-up (→ [0xFFFFA1F8]). Note: the lettered B-family does NOT feed the spark sum [8798] — A-cand reads 13.43° at the cruise point and does not close the 37.3° gap.
 
-**What transfers verbatim:** Nearly everything structural. The directory format, both dispatchers' *mechanisms* (not addresses), the DTC descriptor layout (20-byte entries, P-code in bytes 3–4 BE), the scaling formulas, the axis pool layout. Expect a large fraction of table *names* to exist with identical dims and scalings.
+Full report: `EP5I200F_PORT_REPORT_2026-10-18.md`, `address_map_ep5gd00a_to_ep5i200f.csv`.
 
-**What must be redone:** Every address. Even between two FB20 ROMs, assume nothing ports until verified — the CVT/MT lesson applies *within* the family too.
+## Other targets (difficulty)
 
-**Known public defs:**
-- **Merp/SubaruDefs, Alpha branch (free, downloadable):** FB20 ECUFlash defs `EP5F300H`, `EP5F301I`, `EP5I200F`, `EP5L001G`, plus `EP5G601B` (2012 EDM Impreza 2.0i CVT SH7058 — header-confirmed). Also `EP5F300S`/`T`/`r`, `EP5L000P`, `EP5N000Z` (XV 2.5i) were listed but not opened. Caveat: Alpha-branch community defs; the repo README itself warns of errors.
-- **Local reference copies** (in this project's `reference_defs/`): `RR_EP5G211a.xml`, `RR_EP5G300b.xml`, `RR_EP5G401z.xml` (Forester/XV FB-family RomRaider defs). Note: `RR_EP5G300b.xml` (EDM Forester 2.0i FB20 CVT) could not be independently corroborated in public listings — treat its provenance with caution.
+- **Other FB20 SH7058** (2012–2016 Impreza/Crosstrek): 1/5 with the ROM. Directory-decode, diff against EP5GD00A, trace the rest. Weekend project.
+- **FB25 SH7058** (Forester/XV 2.5): 2/5. Same chip and generation; expect structural similarity, all new addresses.
+- **FA20 SH72531** (BRZ/86): 3/5. Different chip; the blind-mapping experiment measured the method at 100% table precision on this ROM — feasible, slower.
+- **Honda SH7058**: 3/5. Separate spin-off project exists (92 tables) using the same methodology.
+- **Anything else**: the method transfers; nothing else does.
 
-**Known ROM bins:** The "zero free FB20 ROMs" claim was overturned Oct 2026 — the public GitHub repo **bludgod/RomRaider** ("Romraider Stock Roms", 501 files) holds **14 free FB20/FB25 SH7058 ROMs** (1MB each, `.hex` extension — that's why the first hunt missed them), including `EP5F300H` (2013 EDM Impreza 2.0 FB **MT**) and `EP5I200F` (2013 USDM Impreza 2.0i **MT**). The t=19276 dump (an anonymous 2022 upload — not this project's own ROM pull; that pull is pending the cable) remains the only public source for EP5GD00A itself. Paid path: **avtochip.ru** lists a 2012 Subaru XV 2.0 Denso SH7058 entry (`PF_11CYH4N` / `LEP5F300`, 1024kb) — note `PF_11CYH4N` is the *same internal ROM ID* as EP5GD00A, making LEP5F300 the closest documented sibling ROM. It's a paid chiptuning file service (price on request). **XRT (Xtreme Racing Tuning)** e-tunes FB20/FB25 NA (e.g. 2013 Crosstrek FB20 5MT ROM `EP5IA00B`) by email — proof that private defs exist, nothing downloadable.
+## Known ROM sources
 
-**Difficulty:** 1/5 *if you have the ROM*. Directory-decode first, diff the directory against EP5GD00A's, then dispatcher-trace only the entries that don't match. A weekend project with the method in hand.
-
-### Case study: EP5I200F port (Oct 2026) — first measured port
-
-The 2013 USDM Impreza 2.0i MT ROM (`EP5I200F`, from the bludgod repo) was ported using the v0.7 definition as a Rosetta Stone, scoped to the 76 normally-tuned tables. Result: **69/76 mapped (91%) in ~48 minutes** — 58 moved addresses, 11 byte-identical in place.
-
-Findings worth propagating to every future FB20 port:
-
-- **The 2012→2013 calibration is essentially byte-identical** (correlation 1.0000 on nearly everything mapped). Porting within FB20 is an *address-mapping* problem, not a recalibration problem. The entire DBW/torque/limiter block (0xF8E44–0xFB79C) didn't move a single byte.
-- **Calibration moves in blocks.** The 24-scalar knock cluster moved intact (+0x66C); the limits cluster preserved relative offsets. Rule of thumb: when one table in a cluster moves, check the same offset for its neighbors.
-- **The directory lies here too.** Format verified identical, but stale entries exist (Throttle B's entry is wrong) — same lesson as EP5GD00A. Nothing is taken on faith from the directory alone; every claim was backed by data-correlation.
-- **Duplicates are real — don't "dedupe" them.** Base Timing Idle has 5 byte-identical duplicates; OL Cruise has a duplicate; CL Fueling A/B/D share data. They're separate table slots the ECU reads independently.
-- **The port caught a real v0.7 bug:** Base Timing F @0xCD010 is 7×16, not 13×17 (verified against EP5GD00A ROM bytes; fixed in the XML).
-- **One genuine recalibration:** Ignition Dwell (correlation 0.94) — flag before tuning; likely a coil/charging revision.
-- **Two new tables in 2013** with no EP5GD00A counterpart: 16×3 injector-correction tables at 0xD26F8/0xD2764. Minor.
-- **7 tables unresolved** (Base Timing A/C/D, Knock A/B/C/D) — their axes were found but data isn't in the directory and shape-scans failed. That's the honest 10% that needs dispatcher tracing.
-- **Speed estimate for full ports:** ~90% of tables map mechanically in the first hour via directory + data-correlation; full 863-table def estimated 70–80% mechanical. The porting loop corrects the reference too — this is how v0.7 got its Base Timing F fix.
-
-Full report and address map: `EP5I200F_PORT_REPORT_2026-10-18.md`, `address_map_ep5gd00a_to_ep5i200f.csv`.
-
----
-
-## 2. FB25 — Forester 2.5 SH7058 (2012–2013)
-
-**Relation:** Same chip, same Denso firmware generation, bigger displacement sibling. The most likely future project for this author (a Forester FB25 donor ECU is the long-term swap candidate).
-
-**What transfers verbatim:** The method wholesale — directory format, both dispatcher mechanisms, DTC descriptor layout, most scaling formulas. Table names largely overlap (same Denso template).
-
-**What must be redone:** Every address. Verified: **0 of 23 same-named tables share addresses** between EP5GD00A and the FB25 defs, with the lone exception of speed limiters at `0xF8E44`. Treat it as a fresh ROM that happens to speak the same language.
-
-**The interesting divergence:** The FB25 definition **has an "Injector Flow Scaling" scalar** (`EP5G211A` ECUFlash def, verified at `0xcc7f0`; also present in `EP5F400C` at `0xcae80`). Every search method failed to find any equivalent on EP5GD00A. Either the FB20 hides it differently or Denso genuinely omitted it — an open question worth answering by comparing the two ROMs side by side once an FB25 bin surfaces.
-
-**Known public defs:**
-- **Merp/SubaruDefs, Alpha branch (free):** `EP5G211A` (2012 USDM Forester 2.5, **MT** — best lead: manual like the author's car, full tip-in suite), `EP5F400C` (2012 USDM Forester 2.5X MT), `EP5D201D`, `EP5D202N`, `EP5G401Z` (2013 EDM XV 2.5i CVT). Local copies of the `EP5G211A` and `EP5F400C` ECUFlash defs are in this project's `reference_defs/`.
-- RomRaider: `2011EDMForester2.0XAT-EP5D004L_v2.xml` (Forester 2.0X AT).
-
-**Known ROM bins:** None free anywhere public (same hunt as above). No FB25 `.bin` on GitHub or Internet Archive.
-
-**Difficulty:** 2/5 with a ROM in hand. Same playbook as the FB20, plus a genuinely interesting research question (the missing injector scalar).
-
----
-
-## 3. FA20 — BRZ / 86 / FR-S
-
-**Relation:** Different engine (FA20 boxer, Toyota co-development), related Denso ECU. Same vendor habits, different calibration universe.
-
-**What transfers verbatim:** The method, the 32BITBASE template familiarity, many scaling formulas, the DTC descriptor approach, the checksum-search technique. The *shape* of the work.
-
-**What must be redone:** Everything structural. Different engine means different table set (port+direct injection on later FA20s, different AVCS, different torque model). Directory and dispatcher addresses will differ; verify the dispatcher mechanism still holds before assuming it.
-
-**Known public defs (local reference copies in `reference_defs/`):**
-- `ZA1JS10C_v7.xml`, `ZA1JS20G_v1.xml`, `ZA1JU01A_v22.xml` — from callistoprime/brz-defs, 2,400–2,700 tables each. The BRZ community is the best-documented Denso reverse-engineering scene; their defs are the richest structural reference available. **callisto — known in this project's circles as "fa20guy" — is the gold-standard reference for FA20 work.** His defs were used as ground truth to score our blind-mapping experiment below, and as the cross-generation comparison reference for the SH7055→SH7058 scaling fingerprint library. His DTC switches carry honest "DO NOT USE" warnings — the prior art's guesswork that proved our 20-byte DTC descriptor decode was genuinely novel.
-
-**Known ROM bins:** The BRZ scene shares ROMs more freely than the FB scene (check the RomRaider forums and brz-defs community spaces).
-
-### Case study: FA20 blind-mapping experiment (Oct 2026) — the method, measured
-
-Before touching the FA20, we ran a **blind experiment**: map the stock BRZ/86 ROM (`ZA1JA01G`, 1280KB, SH72531) from the binary alone, under strict blind protocol — no peeking at the public def — scoped to normally-tuned tables. The public def was then used to *score* the blind map after it was frozen. This is the closest thing this project has to a controlled measurement of whether the methodology actually works on an unfamiliar ROM.
-
-**Results:**
-- **Maps (timing, fueling, AVCS, throttle — the highest-value tuning tables): 100% precision.** On everything the blind method found, it was essentially never wrong about mechanics: 38/38 axis addresses exact, 7/7 dims exact. The blind run also caught **16 errors in the public def** (5 curves mislabeled as maps, 11 scalars mislabeled as curves, 6 AVCS tables missing dims) and 280 real tables the community def doesn't cover.
-- **Gap closure:** the 28 initial misses were diagnosed as valid records with exactly one reference each (pointer-array entries or `movi20`-loaded call sites) — invisible to call-site-driven harvesting. A direct record-region sweep (`record_sweep.py`) recovered **89/89 dispatcher-findable in-scope tables** (100%), zero regressions. With the fix, the method's ceiling on dispatcher tables is ~35/35 addresses, dims, and axes correct.
-- **Scalars:** a separate literal-pool cross-reference method (`scalar_hunt.py`) achieved **85.4% recall** (35/41), **95.1% combined** with the sweep. The remaining misses are code-embedded constants — honestly out of reach for address-based hunting, and flagged as such.
-- **Bottom line, measured:** bin → draft definition runs at **~70% fully deterministic / 25% agent judgment / 5% human**, with **100% correct addresses/dims/axes on tables found, 85–95% scalar recall, ~75% naming**. The miss rate is a *recall* problem with a known, fixable cause — not a precision problem.
-
-Full study: `AUTO_DEF_FEASIBILITY_2026-10-18.md`, scripts `record_sweep.py` / `scalar_hunt.py` in the project repo. The methodology page's workflow is what was measured here.
-
-**Difficulty:** 3/5. You'd be re-running the full methodology, but on a platform where the community already did half the scouting for you — and the blind experiment above says the methodology earns its keep.
-
----
-
-## 4. Turbo EJ, Gen-1 SH7055 — 2006–2014 WRX / STI
-
-**Relation:** Older Denso chip (SH7055 vs SH7058), same 32-bit SuperH lineage, same 32BITBASE definition template. Denso changed the silicon, not the format.
-
-**What transfers verbatim:** A surprising amount. Verified against the reference defs: **float32BE axes in both generations, and 16 of 28 scaling formulas are character-identical** between the SH7055 WRX defs and EP5GD00A. Knock architecture is unchanged Gen-1→2. The dispatcher-tracing method should apply directly — the lookup-function-first approach is generation-agnostic.
-
-**What must be redone:** Addresses (as always), plus genuine care around turbo-specific subsystems this project never touched: boost control, per-gear compensations, turbo-specific DTCs, the whole boost-error machinery. The tip-in thread this project contributed to is *all* turbo 16/32-bit ECUs — that community knowledge runs the other direction here and is worth mining.
-
-**Known public defs (local reference copies in `reference_defs/`):**
-- `2011_WRX_ecu_defs-REV8.xml`, `2012UsdmWrxMt-AE5K500L_v1.xml` — SH7055 Gen-1, from td-d/SubaruDefs Alpha.
-
-**Known ROM bins:** The WRX scene is the best-supplied in Subaru-land; ROMs circulate in the usual community places (this project deliberately did not collect them — see the scouting notes in [Methodology](Methodology.md)).
-
-**Planned experiment:** A clean Gen-1 decode-from-scratch to measure the method's hit rate against an existing public def. **Blocked: no Gen-1 ROM binary in hand.** (Note: the tip-in thread's "16-bit ECUs" — 2002–2005 WRX — are a *different architecture*, not Gen-1 for our purposes. Gen-1 here means 32-bit SH7055.)
-
-**Difficulty:** 2/5 for the method transfer, 4/5 for turbo-subsystem interpretation. The experiment is the honest way to find out.
-
----
-
-## 5. Honda SH7058 — same silicon, different vendor logic
-
-**Relation:** Same physical chip (Denso SH7058), completely different manufacturer (Keihin/Honda). The silicon is identical; everything Denso-specific is absent.
-
-**What transfers verbatim:** The *meta-method*: directory-decode-first, physical validation against raw bytes, reject audits, bank-finds-before-merging. The Ghidra SH-2 setup and Capstone notes transfer directly (same silicon).
-
-**What must be redone:** The directory format is different: **`[u8 xdim][0x66][u8 ydim][0x66][u32 meta][u32 x_axis][u32 y_axis][u32 data]`** (20-byte entries), and Honda uses **uint16BE axes, not float32BE**. An early "no directory" conclusion here was flat wrong — the directory spanned ROM `0xA454–0xDB8C` all along, and directory-decode-first took the project from 4 tables to **92** (`RR_HONDA_RRB_A080_0.3.xml`, banked, not merged). The scalar directory format is still uncracked; 66 of 92 tables are unidentified; fuel/VTC scalings unverified. The meta field meaning is unknown.
-
-**Known public defs:** Ours is an open one — we haven't found another public Honda SH7058 definition, but verify before repeating that. BitEdit has no Honda SH7058 module.
-
-**Known ROM bins:** The project's test ROM (`37805-RRB-A080-M1.decrypted.bin`, 992KB partial) — provenance is the project's own.
-
-**Difficulty:** 3/5 to replicate the 92, 5/5 to finish (scalar directory + 66 unknowns + zero hardware validation). The honest status: a solid start, not a finished definition.
-
----
-
-## 6. Mazda SH7058 — MX-5 NC (same silicon, opposite architecture)
-
-**Relation:** Same chip, same vendor (Denso), but a fundamentally different firmware architecture. This is the entry that proves the Iron Law.
-
-**What transfers verbatim:** Almost nothing structural — and that's the finding. The scaling *formulas* may rhyme; the computation-flow documentation approach transfers.
-
-**What must be redone:** Everything. The MX-5 NC (CAL `LFG7EG`) has **no dispatcher and no directory** — proven by layout analysis, not by failure to find them. Tables live at hardcoded addresses. The method here inverts: subsystem-by-subsystem analysis instead of lookup-function-first. Also opposite axis behavior: 504 unique axes with only 7 shared, vs. Subaru's aggressive axis pooling. LibreTuner's 875-table count is inflated; the real map count is ~300–400. The only surviving commonalities with Subaru: throttle tables near `0xF0000` and packed DTC data near `0xDD250`.
-
-**Known public defs:** LibreTuner (community), no RomRaider def.
-
-**Difficulty:** 4/5. You're doing archaeology without the map — which is exactly why the Mazda result matters: it defines the boundary of where this methodology works.
-
----
-
-## 7. Saab Trionic and beyond — what the rest of the world taught us
-
-**Relation:** Different vendor, different chip, different decade. Included because the cross-pollination ran both directions.
-
-**What transferred *to* this project (steals, credited):**
-- **Masked-pattern checksum searching** — from the Saab/etnoy scene's approach to finding checksum routines by instruction idiom rather than by address. This is what located EP5GD00A's checksum at ROM `0x152` and proved the ECU doesn't verify at boot.
-- **Computation-flow documentation** — algorithms documented as dataflow (fuel/timing/DBW chains), not just table lists. Directly modeled on the Trionic community's reference style.
-- **LaTeX reference skeleton** — modeled on the Saab t7ref document structure.
-
-**What didn't transfer:** The Saab scene never needed dispatcher-tracing at all — Trionic ROMs ship with embedded symbol tables. Their 25 years of practice validated the *approach* (find the lookup, cross-reference everything) a third time, from the opposite direction: when the symbols are present, you don't need the hunt; when they're absent, the hunt is the only way.
-
-**Beyond (not attempted):** Gen-3 Denso (RH850) — zero open-source definitions exist anywhere we looked. The method *should* transfer (find the lookup function first), but that's a hypothesis, not a result. Toyota/Lexus Denso ECUs of the SH7058 era are the obvious next frontier and completely unexplored by this project.
-
----
-
-## Practical notes for porters
-
-1. **Get the ROM first.** Every entry above is gated on a binary. Without it you're theorizing. (The FB20/FB25 bin shortage is the single biggest blocker in this entire space.)
-2. **Collect reference defs before touching the ROM** ([Methodology](Methodology.md) Stage 0). Names and scalings transfer; use them as search patterns, never as addresses.
-3. **Run the reject audit on yourself.** The 0.3.1r audit (48 of 60 rejects should have been added) is the cheapest lesson in this wiki: your aesthetic filters are wrong, the code references are right.
-4. **Mind the license.** This wiki and the EP5GD00A definition are **CC BY-NC-SA 4.0 — no commercial use, ever**. That license travels with anything derived from this work. If you're building a commercial tuning product on top of these methods, that was never on offer.
-5. **Verify on hardware.** Nothing here has been. The cable, the logger, the wideband — that's where a definition becomes real. Everything before that is educated guessing with receipts.
-
----
-
-*Part of the [EP5GD00A project wiki](Home.md). Built primarily by AI agents; errors expected. Trust nothing, verify everything.*
+- **bludgod/RomRaider** (GitHub, free): 14 FB20/FB25 SH7058 ROMs (.hex), incl. EP5F300H (2013 EDM MT) and EP5I200F (2013 USDM MT). EP5GD00A itself: only the t=19276 thread dump.
+- **Merp/SubaruDefs** (Alpha branch, free): FB20/FB25 ECUFlash defs (community quality — verify).
+- **avtochip.ru** (paid): LEP5F300 lists the same internal ROM ID as EP5GD00A — closest documented sibling.

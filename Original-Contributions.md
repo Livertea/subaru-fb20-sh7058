@@ -237,4 +237,4 @@ If any of the above has prior art we missed, or if we've misattributed something
 
 ---
 
-*Last updated: 2026-10-18. 863 tables. ~97% of ~875–900 estimated universe. Oct 18 campaigns added: VE liveness, four-layer method, D335C fix, AVCS scaling, injector latency continuity, per-gear torque limits.*
+*Last updated: 2026-10-19. 0.8.3 = 412 tables (full definition); 0.8.4a = 459 claimed (47 new: 26 knock params, 20 idle/DBW, B3 high-RPM timing). Oct 19 campaigns added: spark summing equation @0x4ADCE, timing arbitration @0x45AA4, ReqTq-B idle cells as rev-hang-delete target, 78 N.m fmax floor, G/H/I/J label correction, boot disarmer @0x270AC, fuel upstream inputs, 1-3-2-4 firing order from ROM.*

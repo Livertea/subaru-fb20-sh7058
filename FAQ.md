@@ -1,106 +1,45 @@
 # FAQ
 
-> **⚠️ UNVERIFIED RESEARCH — READ THIS FIRST**
->
-> Everything here is **exploratory and unverified**. Table counts, addresses, scalings, labels, and identities may be **wrong**. No table has been validated on real hardware. No ROM has been flashed. Do not tune, flash, or make decisions based on this data until it is independently verified.
->
-> This project was built primarily by AI agents. Errors are expected. **Trust nothing, verify everything.**
+## Is this safe to flash?
 
----
-
-
-## Is this safe to flash to my ECU?
-
-**No.** These definitions have not been validated on real hardware. The tables are structurally validated against ROM bytes, but no one has confirmed correct behavior on a running engine.
-
-**Do not flash a modified ROM based on these definitions.** An incorrect definition can cause engine damage, poor running, or a bricked ECU.
-
-Wait for hardware validation results before considering any flashing.
+**No.** Nothing here has been validated by flashing a modified ROM to a running car. Tables are emulator- and code-validated, which proves our *description* of the ROM is correct — not that changing a value does what you expect. **Do not flash a modified ROM based on this wiki.** Wait for hardware validation.
 
 ## Will this work on my car?
 
-**Only if your ECU has CAL ID EP5GD00A.** This is specifically for:
-- 2012 Subaru Impreza 2.0i (FB20 engine)
-- 5-speed manual transmission
+As shipped, only **EP5GD00A** (2012 Impreza 2.0i, FB20, 5MT) — check with RomRaider's ECU Info or any OBD-II scanner. **Addresses never port between ROMs.** But: the 2013 USDM Impreza 2.0i MT ROM (EP5I200F) was ported at **91% in ~48 minutes** with the calibration byte-identical — so other FB20 SH7058 ROMs (2012–2016 Impreza/Crosstrek) are port candidates, not dead ends. See [Porting-Guide](Porting-Guide.md). Not the CVT (untested), not WRX/Forester/BRZ.
 
-It will **not** work on:
-- CVT/automatic versions (different CAL ID, different addresses)
-- Other model years (even if similar)
-- WRX, Forester, Crosstrek, BRZ (different ROMs entirely)
-- Any other CAL ID
+## What's the difference between 0.8.4a and 0.8.4?
 
-**How to check your CAL ID:** Read it with RomRaider's ECU Info function or a generic OBD-II scanner that reports CAL ID.
+Letter files (0.8.4a) contain **only the new tables** for validation in RomRaider before merging. Numbered versions (0.8.4) are the full merged definition. If a letter file ever contains old tables, that's a bug — it's in the [Project-Log](Project-Log.md).
 
-**The iron law:** Addresses never port between ROMs. Even the CVT version of the same car has completely different table addresses.
+## What can I tune right now?
 
-## Can I help without a cable?
+Only **CLEAR**-tier systems ([Liveness-Matrix](Liveness-Matrix.md)): Base Timing E/F, the 6700 limiter, Target Throttle A/B/C, AVCS intake targets. Everything else is CAUTION (verify first), BLOCKED (wait for the cable), or DO NOT TUNE.
 
-**Yes.** The most valuable contribution right now is RomRaider validation:
-1. Load the definitions with an EP5GD00A ROM dump
-2. Check that tables display sane values
-3. Report anything that looks wrong
+## Can I fix rev hang with this?
 
-See [Contributing](Contributing.md) for details. No hardware required.
+Yes — the mechanism is a steady ~12–15% pedal boost (plate holds a constant 11.37% plate-over-pedal offset on lift, emulator-verified), sourced from a **~7.8× multiplicative gain inside the pedal orchestrator @0xBB638**. The **tuning target is ROM 0xBB968** (the ×100.0 gain pool float): patching it to ×12.81 collapses [0xFFFF67A4] 18.46% → 2.37% at the lift point (emulator-demonstrated, T67A4 10-19). Note the ReqTq-B idle cells are NOT the target — they're 1:1; the boost is upstream. See [Idle-and-DBW](Idle-and-DBW.md).
 
-## What's the difference between 0.3 and 0.3.1a?
+## Why is there no fuel tuning?
 
-- **0.7** is a full definition (863 tables) — load this as your base
-- **0.3.1a** through **0.3.1u** are letter files with only new tables — load these *in addition to* an older base if you want to validate tables individually
+The live injector PW path is **trim-path-mapped, main computer unidentified 10-19** ([Fuel-System](Fuel-System.md)): FUELMAIN proved the mapped path (@0x426FE) has no load/MAF/RPM term — it's a trim path, not the main fuel computer, which is still unidentified. The live output driver @0x435E8 is real (emulator-confirmed), so the output stage is driven by the trim computation. Eleven-plus dead ends, all documented. The car fuels correctly — the path exists, static analysis just hasn't found the main computer. Mode $22 logging is the way in. Until then, no fuel table is tunable. This is honest, not an oversight.
 
-Letter files let you validate new tables separately before they're merged into the next full revision. Total across all files: **863 tables**.
+## Are the knock tables safe to adjust?
 
-## Why are some tables marked "(Unverified)"?
+The 26 parameters are code-read and safe to *adjust*, but **never disable knock**. Note the 5 fake "Knock Correction Advance" tables are quarantined — they're not knock tables (impossible values, zero references).
 
-These tables are structurally confirmed (real data, clean axes, code-referenced) but their **identity or scaling** is uncertain. For example:
-- We know it's a 13×17 table with timing-shaped data, but we're not sure *which* timing function it serves
-- We know the axis is ECT-indexed, but we're not sure of the exact physical meaning
+## What's "permanent skepticism"?
 
-Unverified tables are included for visibility, not for tuning. Don't modify them until their function is confirmed.
-
-## What's "rev hang" and can this fix it?
-
-Rev hang is when the engine holds RPMs after you lift off the throttle to shift. It's caused by idle airflow tables that keep the throttle open during deceleration.
-
-The likely culprits are mapped:
-- **Idle Airflow Decel Adder A** @ 0xD4700
-- **Idle Airflow Decel Adder B** @ 0xD487C
-
-But: **not validated yet.** Don't change these until logger data confirms the relationship.
-
-## Why 863 tables? My WRX definition has 2,000+.
-
-The WRX definition you're thinking of likely includes:
-- Many more DTC switches (we have 243; some defs have 400+)
-- Per-gear variants of tables (our NA engine doesn't need these)
-- Boost control tables (we're naturally aspirated — no turbo)
-- Years of community additions
-
-Our 863 tables (260 3D · 333 2D · 34 1D · 236 Switch) cover the tables the ECU actually references. The dispatcher cross-reference plus the re-triage against fully-resolved call sites found tables missed through directory analysis alone — most are now merged. The WRX simply has a more complex calibration because it's turbocharged.
+The project's standing rule: no CONFIRMED/RESOLVED/VALIDATED label is ever final. Every claim stays open to refutation. In one day (10-19) the sweep voided two prior claims (B3 kill-3, decel-adder death). That's the system working.
 
 ## Was this really built by AI?
 
-Mostly, yes. AI agents did the implementation — reading hex dumps, decoding structures, writing XML — working in parallel under human direction. The human provided vision, caught mistakes, asked the right questions, and validated every file in RomRaider.
+Largely, yes — agents did the implementation under human direction (vision, mistake-catching, RomRaider validation). Disclosed because it affects how you should treat the output: with skepticism, regardless of who did it. **Trust nothing, verify everything.**
 
-This is disclosed because it affects how you should treat the output: with the same skepticism you'd apply to any reverse-engineering work, regardless of who (or what) did it. **Trust nothing, verify everything.**
+## Can I help?
 
-## Can I use this for my Honda/Nissan/Mitsubishi?
+Yes — RomRaider validation needs no cable: load the definition against an EP5GD00A dump, check tables display sane values, report anomalies with ROM bytes to back it up. See [Attributions](Attributions.md) for everyone whose work made this possible.
 
-Not directly. The **methodology** ([Methodology](Methodology.md)) transfers, but no specific tables, addresses, or scalings will work on a different ROM.
+## License?
 
-There is a nascent [Honda-Project](Honda-Project.md) applying the same approach to a Civic Si. It's v0.3 (92 tables) — early days, not for tuning.
-
-## Is VE actually used by the ECU?
-
-**Yes.** An early analysis concluded all 84 VE tables were dead (zero literal code references). That was wrong — the ECU reaches them through a pointer table at `0x6D89C` that holds dispatcher record addresses, which resolve to the VE tables. Byte-level chain proven: code → pointer table → records → tables. All 84 (42 standard 12×11 + 42 high-RPM 12×18) are structurally validated. **Caveat:** VE *scaling* is unresolved — the record's scale and the definition's scale give different physically-implausible answers, and emulation can't distinguish them. Structure yes, units pending dyno/MAF data.
-
-## Are the Knock Correction Advance tables real?
-
-**No — all five "Knock Correction Advance Max" tables (A–E) are fake.** Zero code references, zero dispatcher records, and impossible values (30–80° of advance). This ECU does not use the KCA×IAM architecture the older turbo ECUs do. The real knock system is three-mode (Feedback / Fine / Rough-IAM) with 25+ parameter tables and scalars, all disassembly-confirmed. The fake tables are quarantined, not tuned.
-
-## Can I remap the throttle?
-
-**Not via any table in the definition.** The DBW trace found the pedal → requested-torque path, but the requested-torque RAM value has **zero code consumers** — and 67% of the DBW-region dispatcher records are unreferenced. Every Target Throttle and Torque Limit table is a decoy. The real throttle mechanism is unknown (the servo driver wasn't located either). This is an honest negative: don't go looking for a throttle map that isn't there.
-
-## Who maintains this?
-
-The original author is unlikely to actively maintain this going forward. The documentation is provided as-is. If you find errors or want to continue the work, you're welcome to — that's why it's public. See [Contributing](Contributing.md).
+CC BY-NC-SA 4.0. Attribution, non-commercial, share-alike. **No commercial use, ever.**

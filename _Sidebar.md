@@ -2,35 +2,26 @@
 
 - [Home](Home.md)
 
-**Definitions**
-- [Definitions](Definitions.md)
+**Use it**
+- [Getting-Started](Getting-Started.md)
 - [Table-Reference](Table-Reference.md)
-- [Verified-Core-Definition](Verified-Core-Definition.md)
-- [DTC-Mapping](DTC-Mapping.md)
+- [Liveness-Matrix](Liveness-Matrix.md)
+- [FAQ](FAQ.md)
+
+**Systems**
+- [Timing-System](Timing-System.md)
+- [Knock-System](Knock-System.md)
+- [Fuel-System](Fuel-System.md)
+- [Idle-and-DBW](Idle-and-DBW.md)
 
 **Validation**
 - [Emulation-Validation](Emulation-Validation.md)
-- [Emulator](Emulator.md)
+- [Drive-Log-Findings](Drive-Log-Findings.md)
 - [Methodology](Methodology.md)
 - [Avoiding-Hallucinations](Avoiding-Hallucinations.md)
 
-**Deep Dives**
-- [Ghidra-Guide](Ghidra-Guide.md)
-- [Second-Dispatcher](Second-Dispatcher.md)
-- [Computation-Flow](Computation-Flow.md)
-
-**Tuning & Porting**
-- [FB20-Tuning-Guide](FB20-Tuning-Guide.md)
-- [Porting-Guide](Porting-Guide.md)
-- [Honda-Project](Honda-Project.md)
-
 **Project**
-- [Open-Threads](Open-Threads.md)
+- [Porting-Guide](Porting-Guide.md)
+- [Project-Log](Project-Log.md)
 - [Original-Contributions](Original-Contributions.md)
-- [Musing-Agent-Findings](Musing-Agent-Findings.md)
 - [Attributions](Attributions.md)
-- [FAQ](FAQ.md)
-
-**Contribute**
-- [Collaborate](Collaborate.md)
-- [Contributing](Contributing.md)
